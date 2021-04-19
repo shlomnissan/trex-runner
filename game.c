@@ -4,11 +4,12 @@
 #include "game.h"
 
 #include "sdl/window.h"
-
-#include "game/horizon_line.h"
-#include "game/t_rex.h"
+#include "globals.h"
+#include "actors/horizon_line.h"
+#include "actors/t_rex.h"
 
 uint32_t time;
+double currentSpeed = SPEED;
 
 void InitGame() {
     time = 0;
@@ -17,7 +18,10 @@ void InitGame() {
 }
 
 void Update(uint32_t delta_time) {
-    UpdateHorizonLine(delta_time);
+    if (currentSpeed < MAX_SPEED) {
+        currentSpeed += ACCELERATION;
+    }
+    UpdateHorizonLine(delta_time, currentSpeed);
     UpdateTRex(delta_time);
 }
 

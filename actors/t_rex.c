@@ -6,6 +6,7 @@
 #include "sdl/graphics.h"
 #include "sdl/input.h"
 #include "assets/spritesheet.h"
+#include "globals.h"
 
 typedef enum {
     WAITING = 0,
@@ -39,7 +40,9 @@ int tx_height = 47;
 int tx_ground_offset = 10;
 int tx_time = 0;
 int tx_curr_frame = 0;
+int tx_ground_pos = 0;
 
+double tx_jump_velocity = 0.0;
 Point tx_sprite_def;
 Point tx_pos;
 
@@ -50,16 +53,19 @@ void UpdateState(TRexState state);
 void HandleControls();
 void UpdateAnimationFrames(uint32_t delta_time);
 void StartJump();
-void EndJump();
-void UpdateJump();
+void UpdateJump(uint32_t delta_time);
+void Reset();
+
+int GroundPosition();
 
 bool IsJumpKeyPressed();
 
 void InitTRex() {
     tx_sprite_def = sprite_definitions[TREX];
     tx_anim_frame = tx_anim[tx_state];
+    tx_ground_pos = 150 - tx_height - tx_ground_offset;
     tx_pos.x = 50;
-    tx_pos.y = 150 - tx_height - tx_ground_offset;
+    tx_pos.y = tx_ground_pos;
     tx_time = 0;
 }
 
@@ -68,13 +74,12 @@ void UpdateTRex(uint32_t delta_time) {
     UpdateAnimationFrames(delta_time);
 
     if (tx_state == JUMPING) {
-        UpdateJump();
+        UpdateJump(delta_time);
     }
 }
 
 void HandleControls() {
     if (tx_state != JUMPING && IsJumpKeyPressed()) {
-        UpdateState(JUMPING);
         StartJump();
     }
 }
@@ -87,18 +92,37 @@ bool IsJumpKeyPressed() {
 void UpdateState(TRexState state) {
     tx_state = state;
     tx_anim_frame = tx_anim[tx_state];
+    tx_curr_frame = 0;
 }
 
 void StartJump() {
-
+    UpdateState(JUMPING);
+    tx_jump_velocity = INITIAL_JUMP_VELOCITY;
 }
 
-void EndJump() {
+void UpdateJump(uint32_t delta_time) {
+    double ms_per_frame = tx_anim[tx_state].ms_per_frame;
+    double frames_elapsed = delta_time / ms_per_frame;
 
+    tx_pos.y += tx_jump_velocity * frames_elapsed;
+
+    tx_jump_velocity += GRAVITY * frames_elapsed;
+
+    if (tx_pos.y < MAX_JUMP_HEIGHT) {
+        if (tx_jump_velocity < DROP_VELOCITY) {
+            tx_jump_velocity = DROP_VELOCITY;
+        }
+    }
+
+    if (tx_pos.y > tx_ground_pos) {
+        Reset();
+    }
 }
 
-void UpdateJump() {
-
+void Reset() {
+    tx_pos.y = tx_ground_pos;
+    tx_jump_velocity = 0;
+    UpdateState(RUNNING);
 }
 
 void UpdateAnimationFrames(uint32_t delta_time) {

@@ -15,20 +15,21 @@ SET(INCLUDE
         sdl/input.h
         sdl/graphics.h
         assets/spritesheet.h
-        game/horizon_line.h
-        game/t_rex.h
+        globals.h
+        actors/horizon_line.h
+        actors/t_rex.h
         game.h
-        )
+)
 
 set(SOURCE
         sdl/window.c
         sdl/input.c
         sdl/graphics.c
         assets/spritesheet.c
-        game/horizon_line.c
-        game/t_rex.c
+        actors/horizon_line.c
+        actors/t_rex.c
         game.c
-        )
+)
 
 add_executable(${PROJECT_NAME} main.c ${INCLUDE} ${SOURCE})
 

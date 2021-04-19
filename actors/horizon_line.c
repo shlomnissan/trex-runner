@@ -19,7 +19,7 @@ int hl_source_x[2];
 Point hl_sprite_def;
 
 int GetRandomLinePosition(void);
-void UpdateHorizonLineXPos(int32_t position);
+void UpdateHorizonLineXPos(int32_t position, int increment);
 
 void InitHorizonLine() {
     hl_sprite_def = sprite_definitions[HORIZON];
@@ -29,14 +29,19 @@ void InitHorizonLine() {
     hl_source_x[1] = hl_sprite_def.x + hl_width;
 }
 
-void UpdateHorizonLine(uint32_t delta_time) {
-    hl_pos_x[0] <= 0 ? UpdateHorizonLineXPos(0) : UpdateHorizonLineXPos(1);
+void UpdateHorizonLine(uint32_t delta_time, double speed) {
+    int increment = speed * (60.0 / 1000.0) * delta_time;
+    if (hl_pos_x[0] <= 0) {
+        UpdateHorizonLineXPos(0, increment);
+    } else {
+        UpdateHorizonLineXPos(1, increment);
+    }
 }
 
-void UpdateHorizonLineXPos(int position) {
+void UpdateHorizonLineXPos(int position, int increment) {
     int line_0 = position;
     int line_1 = position == 0 ? 1 : 0;
-    hl_pos_x[line_0] -= 4;
+    hl_pos_x[line_0] -= increment;
     hl_pos_x[line_1] = hl_pos_x[line_0] + hl_width;
     if (hl_pos_x[line_0] <= -hl_width) {
         hl_pos_x[line_0] += hl_width * 2;

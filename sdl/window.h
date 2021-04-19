@@ -1,8 +1,8 @@
 // Copyright 2021 Betamark Pty Ltd. All rights reserved.
 // Author: Shlomi Nissan (shlomi@betamark.com)
 
-#ifndef TREX_RUN_WINDOW_H
-#define TREX_RUN_WINDOW_H
+#ifndef TREX_RUNNER_WINDOW_H
+#define TREX_RUNNER_WINDOW_H
 
 #include <stdbool.h>
 
@@ -18,4 +18,4 @@ void StartGameLoop(void (*game_loop)());
 
 uint32_t GetTicks();
 
-#endif  // TREX_RUN_WINDOW_H
+#endif  // TREX_RUNNER_WINDOW_H

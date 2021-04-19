@@ -1,8 +1,8 @@
 // Copyright 2021 Betamark Pty Ltd. All rights reserved.
 // Author: Shlomi Nissan (shlomi@betamark.com)
 
-#ifndef TREX_RUN_GRAPHICS_H
-#define TREX_RUN_GRAPHICS_H
+#ifndef TREX_RUNNER_GRAPHICS_H
+#define TREX_RUNNER_GRAPHICS_H
 
 #include <stdint.h>
 
@@ -27,7 +27,7 @@ typedef struct {
 typedef struct {
     int frames[10];
     int len;
-    int ms_per_frame;
+    double ms_per_frame;
 } AnimFrame;
 
 int32_t LoadTexture(char* filename);
@@ -36,4 +36,4 @@ void DrawTexture(Texture* texture);
 
 void DestroyTextures();
 
-#endif  // TREX_RUN_GRAPHICS_H
+#endif  // TREX_RUNNER_GRAPHICS_H

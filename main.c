@@ -10,7 +10,7 @@
 
 #define WINDOW_WIDTH 600
 #define WINDOW_HEIGHT 150
-#define WINDOW_TITLE "T-Rex Run!"
+#define WINDOW_TITLE "T-Rex Runner"
 
 int main() {
     srand(GetTicks());
