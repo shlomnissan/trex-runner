@@ -20,7 +20,6 @@ Point hl_sprite_def;
 
 int GetRandomLinePosition(void);
 void UpdateHorizonLineXPos(int32_t position);
-void DrawHorizonLine(void);
 
 void InitHorizonLine() {
     hl_sprite_def = sprite_definitions[HORIZON];

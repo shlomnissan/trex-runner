@@ -13,10 +13,12 @@ void PollEvents(void (*on_quit)()) {
         if (event.type == SDL_QUIT) on_quit();
 
         if (event.type == SDL_KEYDOWN) {
-            keyboard[event.key.keysym.sym] = true;
+            const uint8_t key = event.key.keysym.sym;
+            keyboard[key] = true;
         }
         if (event.type == SDL_KEYUP) {
-            keyboard[event.key.keysym.sym] = false;
+            const uint8_t key = event.key.keysym.sym;
+            keyboard[key] = false;
         }
     }
 }

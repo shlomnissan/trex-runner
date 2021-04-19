@@ -6,6 +6,10 @@
 
 #include <stdbool.h>
 
+#define KEY_SPACE 32
+#define KEY_UP 82
+#define KEY_DOWN 81
+
 void PollEvents(void (*on_quit)());
 
 bool IsKeyPressed(char key);

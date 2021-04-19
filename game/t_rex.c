@@ -4,23 +4,34 @@
 #include "t_rex.h"
 
 #include "sdl/graphics.h"
+#include "sdl/input.h"
 #include "assets/spritesheet.h"
 
 typedef enum {
-    RUNNING = 1,
+    WAITING = 0,
+    RUNNING,
+    JUMPING
 } TRexState;
 
 AnimFrame tx_anim[] = {
     {
+        // Waiting
         .frames = {44, 0},
         .len = 2,
         .ms_per_frame = 1000 / 3
     },
     {
+        // Running
         .frames = {88, 132},
         .len = 2,
         .ms_per_frame = 1000 / 12
-    }
+    },
+    {
+        // Jumping
+        .frames = {0},
+        .len = 1,
+        .ms_per_frame = 1000 / 60
+    },
 };
 
 int tx_width = 44;
@@ -35,7 +46,14 @@ Point tx_pos;
 TRexState tx_state = RUNNING;
 AnimFrame tx_anim_frame;
 
-void DrawTRex(void);
+void UpdateState(TRexState state);
+void HandleControls();
+void UpdateAnimationFrames(uint32_t delta_time);
+void StartJump();
+void EndJump();
+void UpdateJump();
+
+bool IsJumpKeyPressed();
 
 void InitTRex() {
     tx_sprite_def = sprite_definitions[TREX];
@@ -46,6 +64,44 @@ void InitTRex() {
 }
 
 void UpdateTRex(uint32_t delta_time) {
+    HandleControls();
+    UpdateAnimationFrames(delta_time);
+
+    if (tx_state == JUMPING) {
+        UpdateJump();
+    }
+}
+
+void HandleControls() {
+    if (tx_state != JUMPING && IsJumpKeyPressed()) {
+        UpdateState(JUMPING);
+        StartJump();
+    }
+}
+
+bool IsJumpKeyPressed() {
+    return IsKeyPressed(KEY_UP) ||
+           IsKeyPressed(KEY_SPACE);
+}
+
+void UpdateState(TRexState state) {
+    tx_state = state;
+    tx_anim_frame = tx_anim[tx_state];
+}
+
+void StartJump() {
+
+}
+
+void EndJump() {
+
+}
+
+void UpdateJump() {
+
+}
+
+void UpdateAnimationFrames(uint32_t delta_time) {
     tx_time += delta_time;
     if (tx_time >= tx_anim_frame.ms_per_frame) {
         if (tx_curr_frame == tx_anim_frame.len) {
