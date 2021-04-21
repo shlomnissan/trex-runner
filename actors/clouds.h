@@ -15,6 +15,7 @@ typedef struct {
     bool is_visible;
 } Cloud;
 
+extern int cloud_count;
 extern int last_cloud;
 extern Cloud* clouds[];
 
