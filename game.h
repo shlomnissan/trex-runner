@@ -4,8 +4,10 @@
 #ifndef TREX_RUNNER_GAME_H
 #define TREX_RUNNER_GAME_H
 
-void InitGame(void);
+void InitGame();
 
-void RunGame(void);
+void RunGame();
+
+void DestroyGame();
 
 #endif  // TREX_RUNNER_GAME_H

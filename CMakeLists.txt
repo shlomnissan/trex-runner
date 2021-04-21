@@ -16,8 +16,10 @@ SET(INCLUDE
         sdl/graphics.h
         assets/spritesheet.h
         globals.h
-        actors/horizon_line.h
         actors/t_rex.h
+        actors/horizon.h
+        actors/horizon_line.h
+        actors/clouds.h
         game.h
 )
 
@@ -26,8 +28,10 @@ set(SOURCE
         sdl/input.c
         sdl/graphics.c
         assets/spritesheet.c
-        actors/horizon_line.c
         actors/t_rex.c
+        actors/horizon.c
+        actors/horizon_line.c
+        actors/clouds.c
         game.c
 )
 
@@ -37,4 +41,5 @@ target_link_libraries(
     ${PROJECT_NAME}
     ${SDL2_LIBRARY}
     ${SDL2_IMAGE_LIBRARY}
+    m
 )

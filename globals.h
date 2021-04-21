@@ -4,6 +4,9 @@
 #ifndef TREX_RUNNER_GLOBALS_H
 #define TREX_RUNNER_GLOBALS_H
 
+#define WINDOW_WIDTH 600
+#define WINDOW_HEIGHT 150
+#define WINDOW_TITLE "T-Rex Runner"
 #define GRAVITY 0.6
 #define SPEED 6
 #define INITIAL_JUMP_VELOCITY -10
@@ -12,5 +15,15 @@
 #define DROP_VELOCITY -5
 #define MAX_JUMP_HEIGHT 30
 #define SPEED_DROP_COEFFICIENT 3
+
+typedef struct {
+    int min;
+    int max;
+} Range;
+
+typedef struct {
+    int x;
+    int y;
+} Point;
 
 #endif  // TREX_RUNNER_GLOBALS_H

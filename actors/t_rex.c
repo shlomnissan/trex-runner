@@ -1,14 +1,11 @@
 // Copyright 2021 Betamark Pty Ltd. All rights reserved.
 // Author: Shlomi Nissan (shlomi@betamark.com)
 
-#include <stdio.h>
-
 #include "t_rex.h"
-
+#include "globals.h"
+#include "assets/spritesheet.h"
 #include "sdl/graphics.h"
 #include "sdl/input.h"
-#include "assets/spritesheet.h"
-#include "globals.h"
 
 typedef enum {
     RUNNING = 1,
@@ -18,25 +15,25 @@ typedef enum {
 
 AnimFrame tx_anim[] = {
     {
-        // Waiting
+        // waiting
         .frames = {44, 0},
         .len = 2,
         .ms_per_frame = 1000 / 3
     },
     {
-        // Running
+        // running
         .frames = {88, 132},
         .len = 2,
         .ms_per_frame = 1000 / 12
     },
     {
-        // Jumping
+        // jumping
         .frames = {0},
         .len = 1,
         .ms_per_frame = 1000 / 60
     },
     {
-        // Ducking
+        // ducking
         .frames = {264, 323},
         .len = 2,
         .ms_per_frame = 1000 / 8
@@ -91,7 +88,7 @@ void UpdateTRex(uint32_t delta_time) {
 }
 
 void HandleControls() {
-    // Jumping
+    // jumping
     if (tx_state != JUMPING && IsJumpKeyPressed()) {
         StartJump();
     }
@@ -102,7 +99,7 @@ void HandleControls() {
         SetSpeedDrop();
     }
 
-    // Ducking
+    // ducking
     if (tx_state == RUNNING && IsKeyPressed(KEY_DOWN)) {
         UpdateState(DUCKING);
     }

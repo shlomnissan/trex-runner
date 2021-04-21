@@ -4,7 +4,7 @@
 #ifndef TREX_RUNNER_SPRITESHEET_H
 #define TREX_RUNNER_SPRITESHEET_H
 
-#include "sdl/graphics.h"
+#include "globals.h"
 
 #define CACTUS_LARGE    0
 #define CACTUS_SMALL    1

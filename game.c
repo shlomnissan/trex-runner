@@ -2,31 +2,30 @@
 // Author: Shlomi Nissan (shlomi@betamark.com)
 
 #include "game.h"
-
 #include "sdl/window.h"
 #include "globals.h"
-#include "actors/horizon_line.h"
+#include "actors/horizon.h"
 #include "actors/t_rex.h"
 
 uint32_t time;
-double currentSpeed = SPEED;
+double current_speed = SPEED;
 
 void InitGame() {
     time = 0;
-    InitHorizonLine();
+    InitHorizon();
     InitTRex();
 }
 
 void Update(uint32_t delta_time) {
-    if (currentSpeed < MAX_SPEED) {
-        currentSpeed += ACCELERATION;
+    if (current_speed < MAX_SPEED) {
+        current_speed += ACCELERATION;
     }
-    UpdateHorizonLine(delta_time, currentSpeed);
+    UpdateHorizon(delta_time, current_speed);
     UpdateTRex(delta_time);
 }
 
 void Draw() {
-    DrawHorizonLine();
+    DrawHorizon();
     DrawTRex();
 }
 
@@ -36,4 +35,8 @@ void RunGame() {
     time = now;
     Update(delta_time);
     Draw();
+}
+
+void DestroyGame() {
+    DestroyHorizon();
 }

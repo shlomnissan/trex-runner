@@ -3,25 +3,22 @@
 
 #include <stdlib.h>
 
+#include "game.h"
+#include "globals.h"
 #include "sdl/window.h"
 #include "sdl/graphics.h"
 
-#include "game.h"
-
-#define WINDOW_WIDTH 600
-#define WINDOW_HEIGHT 150
-#define WINDOW_TITLE "T-Rex Runner"
-
 int main() {
-    srand(GetTicks());
-
     InitializeWindow(WINDOW_TITLE, WINDOW_WIDTH, WINDOW_HEIGHT);
     LoadTexture("assets/spritesheet.png");
+
+    srand(GetTicks());
 
     InitGame();
     StartGameLoop(RunGame);
 
     DeinitWindow();
     DestroyTextures();
+    DestroyGame();
     return 0;
 }
