@@ -3,7 +3,7 @@
 
 #include "t_rex.h"
 #include "globals.h"
-#include "assets/spritesheet.h"
+#include "spritesheet.h"
 #include "sdl/graphics.h"
 #include "sdl/input.h"
 

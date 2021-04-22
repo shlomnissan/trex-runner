@@ -7,7 +7,7 @@
 #include "clouds.h"
 #include "globals.h"
 #include "sdl/graphics.h"
-#include "assets/spritesheet.h"
+#include "spritesheet.h"
 
 Range cl_sky_level = {
     .min = 30,

@@ -10,7 +10,7 @@
 
 int main() {
     InitializeWindow(WINDOW_TITLE, WINDOW_WIDTH, WINDOW_HEIGHT);
-    LoadTexture("assets/spritesheet.png");
+    LoadTexture("assets/textures/spritesheet.png");
 
     srand(GetTicks());
 

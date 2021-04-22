@@ -4,7 +4,7 @@
 #include <stdlib.h>
 
 #include "horizon_line.h"
-#include "assets/spritesheet.h"
+#include "spritesheet.h"
 #include "sdl/graphics.h"
 
 int hl_bump_threshold = 5;
