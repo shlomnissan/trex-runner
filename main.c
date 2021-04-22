@@ -7,6 +7,7 @@
 #include "globals.h"
 #include "sdl/window.h"
 #include "sdl/graphics.h"
+#include "sdl/sounds.h"
 
 int main() {
     InitializeWindow(WINDOW_TITLE, WINDOW_WIDTH, WINDOW_HEIGHT);
