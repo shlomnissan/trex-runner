@@ -4,23 +4,23 @@
 #include "game.h"
 #include "sys/window.h"
 #include "globals.h"
-#include "actors/horizon.h"
-#include "actors/t_rex.h"
+#include "objects/horizon.h"
+#include "objects/t_rex.h"
 
-uint32_t time;
-double current_speed = SPEED;
+uint32_t game_time;
+double game_speed = SPEED;
 
 void InitGame() {
-    time = 0;
+    game_time = 0;
     InitHorizon();
     InitTRex();
 }
 
 void Update(uint32_t delta_time) {
-    if (current_speed < MAX_SPEED) {
-        current_speed += ACCELERATION;
+    if (game_speed < MAX_SPEED) {
+        game_speed += ACCELERATION;
     }
-    UpdateHorizon(delta_time, current_speed);
+    UpdateHorizon(delta_time, game_speed);
     UpdateTRex(delta_time);
 }
 
@@ -31,8 +31,8 @@ void Draw() {
 
 void RunGame() {
     uint32_t now = GetTicks();
-    uint32_t delta_time = now - time;
-    time = now;
+    uint32_t delta_time = now - game_time;
+    game_time = now;
     Update(delta_time);
     Draw();
 }

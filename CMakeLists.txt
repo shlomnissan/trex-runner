@@ -16,10 +16,10 @@ SET(INCLUDE
         sys/input.h
         sys/graphics.h
         sys/sounds.h
-        actors/t_rex.h
-        actors/horizon.h
-        actors/horizon_line.h
-        actors/clouds.h
+        objects/t_rex.h
+        objects/horizon.h
+        objects/horizon_line.h
+        objects/clouds.h
         globals.h
         spritesheet.h
         game.h
@@ -30,10 +30,10 @@ set(SOURCE
         sys/input.c
         sys/graphics.c
         sys/sounds.c
-        actors/t_rex.c
-        actors/horizon.c
-        actors/horizon_line.c
-        actors/clouds.c
+        objects/t_rex.c
+        objects/horizon.c
+        objects/horizon_line.c
+        objects/clouds.c
         spritesheet.c
         game.c
  )
