@@ -5,6 +5,7 @@
 
 #include "window.h"
 #include "input.h"
+#include "sounds.h"
 
 #define WINDOW_FPS 16.66 // 1000ms / 60fps
 
@@ -28,6 +29,7 @@ bool InitializeWindow(char* title, uint32_t width, uint32_t height) {
     if (!CreateWindow(title, width, height) || !CreateRenderer()) {
         return false;
     }
+    InitializeMixer();
     is_running = true;
     return true;
 }

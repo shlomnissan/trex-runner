@@ -12,10 +12,10 @@ find_package(SDL2_mixer REQUIRED)
 include_directories(${PROJECT_SOURCE_DIR})
 
 SET(INCLUDE
-        sdl/window.h
-        sdl/input.h
-        sdl/graphics.h
-        sdl/sounds.h
+        sys/window.h
+        sys/input.h
+        sys/graphics.h
+        sys/sounds.h
         actors/t_rex.h
         actors/horizon.h
         actors/horizon_line.h
@@ -26,10 +26,10 @@ SET(INCLUDE
 )
 
 set(SOURCE
-        sdl/window.c
-        sdl/input.c
-        sdl/graphics.c
-        sdl/sounds.c
+        sys/window.c
+        sys/input.c
+        sys/graphics.c
+        sys/sounds.c
         actors/t_rex.c
         actors/horizon.c
         actors/horizon_line.c

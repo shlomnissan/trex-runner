@@ -2,7 +2,7 @@
 // Author: Shlomi Nissan (shlomi@betamark.com)
 
 #include "game.h"
-#include "sdl/window.h"
+#include "sys/window.h"
 #include "globals.h"
 #include "actors/horizon.h"
 #include "actors/t_rex.h"

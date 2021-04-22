@@ -29,6 +29,6 @@ int32_t LoadTexture(char* filename);
 
 void DrawTexture(Texture* texture);
 
-void DestroyTextures();
+void FreeTextures();
 
 #endif  // TREX_RUNNER_GRAPHICS_H

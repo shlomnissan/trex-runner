@@ -5,21 +5,48 @@
 
 #include "game.h"
 #include "globals.h"
-#include "sdl/window.h"
-#include "sdl/graphics.h"
-#include "sdl/sounds.h"
+#include "sys/window.h"
+#include "sys/graphics.h"
+#include "sys/sounds.h"
 
-int main() {
-    InitializeWindow(WINDOW_TITLE, WINDOW_WIDTH, WINDOW_HEIGHT);
-    LoadTexture("assets/textures/spritesheet.png");
+bool Initialize() {
+    return InitializeWindow(
+        WINDOW_TITLE,
+        WINDOW_WIDTH,
+        WINDOW_HEIGHT
+    );
+}
 
+bool LoadAssets() {
+    if (LoadTexture("assets/textures/spritesheet.png") == -1) {
+        return false;
+    }
+    LoadSoundEffect("assets/sounds/sfx-hit.wav");
+    LoadSoundEffect("assets/sounds/sfx-press.wav");
+    LoadSoundEffect("assets/sounds/sfx-reached.wav");
+    return true;
+}
+
+void StartGame() {
     srand(GetTicks());
-
     InitGame();
     StartGameLoop(RunGame);
+}
 
-    DeinitWindow();
-    DestroyTextures();
+void FreeResources() {
+    FreeTextures();
+    FreeSoundEffects();
     DestroyGame();
+    DeinitMixer();
+    DeinitWindow();
+}
+
+int main() {
+    if (!Initialize() || !LoadAssets()) return -1;
+
+    StartGame();
+
+    FreeResources();
+
     return 0;
 }

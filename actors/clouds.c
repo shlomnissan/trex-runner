@@ -6,7 +6,7 @@
 
 #include "clouds.h"
 #include "globals.h"
-#include "sdl/graphics.h"
+#include "sys/graphics.h"
 #include "spritesheet.h"
 
 Range cl_sky_level = {

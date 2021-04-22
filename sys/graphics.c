@@ -8,15 +8,15 @@
 #include "graphics.h"
 #include "window.h"
 
-#define TEXTURES_LEN 10
+#define MAX_TEXTURES 10
 
 uint32_t last_texture_id = 0;
-SDL_Texture* textures[TEXTURES_LEN] = {NULL};
+SDL_Texture* textures[MAX_TEXTURES] = {NULL};
 
 SDL_Rect SDLRectFromFrame(Frame frame);
 
 int32_t LoadTexture(char* filename) {
-    if (last_texture_id == TEXTURES_LEN) {
+    if (last_texture_id == MAX_TEXTURES) {
         printf("Unable to load %s. There's no more room left in the textures array.", filename);
         return -1;
     }
@@ -46,13 +46,11 @@ void DrawTexture(Texture* texture) {
     SDL_RenderCopy(renderer, textures[texture->id], &source, &destination);
 }
 
-void DestroyTextures() {
-    uint32_t len = last_texture_id;
-    for (int i = 0; i < len; ++i) {
+void FreeTextures() {
+    for (int i = 0; i < MAX_TEXTURES; ++i) {
         if (textures[i] != NULL) {
             SDL_DestroyTexture(textures[i]);
             textures[i] = NULL;
-            --last_texture_id;
         }
     }
 }

@@ -4,8 +4,9 @@
 #include "t_rex.h"
 #include "globals.h"
 #include "spritesheet.h"
-#include "sdl/graphics.h"
-#include "sdl/input.h"
+#include "sys/graphics.h"
+#include "sys/input.h"
+#include "sys/sounds.h"
 
 typedef enum {
     RUNNING = 1,
@@ -89,7 +90,7 @@ void UpdateTRex(uint32_t delta_time) {
 
 void HandleControls() {
     // jumping
-    if (tx_state != JUMPING && IsJumpKeyPressed()) {
+    if (tx_state != JUMPING && tx_state != DUCKING && IsJumpKeyPressed()) {
         StartJump();
     }
     if (tx_state == JUMPING && !IsJumpKeyPressed()) {
@@ -121,6 +122,7 @@ void UpdateState(TRexState state) {
 
 void StartJump() {
     UpdateState(JUMPING);
+    PlaySound(SFX_PRESS);
     tx_jump_velocity = INITIAL_JUMP_VELOCITY;
 }
 
