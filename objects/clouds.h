@@ -15,16 +15,10 @@ typedef struct {
     bool is_visible;
 } Cloud;
 
-extern int cloud_count;
-extern int last_cloud;
-extern Cloud* clouds[];
+Cloud* MakeCloud();
 
-void AddCloud();
+void UpdateCloud(Cloud* cloud, double speed);
 
-void UpdateClouds(uint32_t delta_time, double speed);
-
-void DrawClouds();
-
-void DestroyClouds();
+void DrawCloud(Cloud* cloud);
 
 #endif  // TREX_RUNNER_CLOUDS_H

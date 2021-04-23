@@ -12,6 +12,6 @@ void UpdateHorizon(uint32_t delta_time, double speed);
 
 void DrawHorizon();
 
-void DestroyHorizon();
+void FreeHorizonResources();
 
 #endif  // TREX_RUNNER_HORIZON_H

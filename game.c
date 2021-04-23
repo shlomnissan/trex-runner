@@ -38,5 +38,5 @@ void RunGame() {
 }
 
 void DestroyGame() {
-    DestroyHorizon();
+    FreeHorizonResources();
 }

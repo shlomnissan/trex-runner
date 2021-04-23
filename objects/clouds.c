@@ -2,103 +2,72 @@
 // Author: Shlomi Nissan (shlomi@betamark.com)
 
 #include <stdlib.h>
-#include <math.h>
 
 #include "clouds.h"
 #include "globals.h"
 #include "sys/graphics.h"
 #include "spritesheet.h"
 
-Range cl_sky_level = {
-    .min = 30,
-    .max = 71
+Range cloud_sky_level_range = {
+    .min = CLOUD_SKY_LEVEL_MIN,
+    .max = CLOUD_SKY_LEVEL_MAX
 };
 
-Range cl_cloud_gap = {
-    .min = 100,
-    .max = 400
+Range cloud_gap_range = {
+    .min = CLOUD_GAP_MIN,
+    .max = CLOUD_GAP_MAX
 };
 
-Point cl_sprite_def = {
+Point cloud_sprite_def = {
     .x = -1,
     .y = -1
 };
 
-Cloud* clouds[MAX_CLOUDS] = {NULL};
-int last_cloud = -1;
-int cloud_count = 0;
-
-int cl_width = 46;
-int cl_height = 14;
-
-double cl_speed = 0.2;
+int cloud_width = 46;
+int cloud_height = 14;
 
 int RandomFromRange(Range range);
 
-void AddCloud() {
-    ++last_cloud;
-    if (last_cloud == MAX_CLOUDS) last_cloud = 0;
-    if (clouds[last_cloud] != NULL) return;
-
+Cloud* MakeCloud() {
     // initialize sprite definition if needed
-    if (cl_sprite_def.x == -1 && cl_sprite_def.y == -1) {
-        cl_sprite_def = sprite_definitions[CLOUD];
+    if (cloud_sprite_def.x == -1 && cloud_sprite_def.y == -1) {
+        cloud_sprite_def = sprite_definitions[CLOUD];
     }
 
     // allocate memory for new cloud
     Cloud* cloud = (Cloud*) malloc(sizeof(Cloud));
     cloud->pos.x = WINDOW_WIDTH;
-    cloud->pos.y = RandomFromRange(cl_sky_level);
-    cloud->cloud_gap = RandomFromRange(cl_cloud_gap);
-    clouds[last_cloud] = cloud;
-    cloud_count++;
+    cloud->pos.y = RandomFromRange(cloud_sky_level_range);
+    cloud->cloud_gap = RandomFromRange(cloud_gap_range);
+    cloud->is_visible = true;
+
+    return cloud;
 }
 
-void UpdateClouds(uint32_t delta_time, double speed) {
-    double cloud_speed = ceil(cl_speed / 1000 * delta_time * speed);
-    for (int i = 0; i < MAX_CLOUDS; ++i) {
-        if (clouds[i] != NULL) {
-            clouds[i]->pos.x -= cloud_speed;
+void UpdateCloud(Cloud* cloud, double speed) {
+    cloud->pos.x -= speed;
+    if (cloud->pos.x + cloud_width < 0) {
+        cloud->is_visible = false;
+    }
+}
 
-            // remove cloud when it's out of screen
-            if (clouds[i]->pos.x + cl_width < 0) {
-                --cloud_count;
-                free(clouds[i]);
-                clouds[i] = NULL;
+void DrawCloud(Cloud* cloud) {
+    Texture texture = {
+            .id = 0,
+            .source = {
+                    .x = cloud_sprite_def.x,
+                    .y = cloud_sprite_def.y,
+                    .width = cloud_width,
+                    .height =  cloud_height
+            },
+            .destination = {
+                    .x = cloud->pos.x,
+                    .y = cloud->pos.y,
+                    .width = cloud_width,
+                    .height = cloud_height
             }
-        }
-    }
-}
-
-void DrawClouds() {
-    for (int i = 0; i < MAX_CLOUDS; ++i) {
-        if (clouds[i] != NULL) {
-            Texture texture = {
-                    .id = 0,
-                    .source = {
-                            .x = cl_sprite_def.x,
-                            .y = cl_sprite_def.y,
-                            .width = cl_width,
-                            .height =  cl_height
-                    },
-                    .destination = {
-                            .x = clouds[i]->pos.x,
-                            .y = clouds[i]->pos.y,
-                            .width = cl_width,
-                            .height = cl_height
-                    }
-            };
-            DrawTexture(&texture);
-        }
-    }
-}
-
-void DestroyClouds() {
-    for (int i = 0; i < MAX_CLOUDS; ++i) {
-        if (clouds[i] != NULL) {
-            free(clouds[i]);
-        }
-    }
+    };
+    DrawTexture(&texture);
 }
 
 int RandomFromRange(Range range) {
