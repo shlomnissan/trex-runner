@@ -70,7 +70,3 @@ void DrawCloud(Cloud* cloud) {
     };
     DrawTexture(&texture);
 }
-
-int RandomFromRange(Range range) {
-    return range.min + rand() % (range.max - range.min);
-}

@@ -23,7 +23,7 @@ double cloud_speed = 0.2;
 void AddCloud();
 void UpdateClouds(uint32_t delta_time, double speed);
 
-void AddObstacle();
+void AddObstacle(double speed);
 void UpdateObstacles(uint32_t delta_time, double speed);
 
 void InitHorizon() {
@@ -86,14 +86,14 @@ void UpdateClouds(uint32_t delta_time, double speed) {
     }
 }
 
-void AddObstacle() {
+void AddObstacle(double speed) {
     ++obstacle_last_idx;
 
     if (obstacle_last_idx == MAX_OBSTACLE_LENGTH) obstacle_last_idx = 0;
     if (obstacles[obstacle_last_idx] != NULL) return;
 
     int obstacle_type_index = rand() % MAX_OBSTACLE_LENGTH;
-    obstacles[obstacle_last_idx] = MakeObstacle(obstacle_type_index);
+    obstacles[obstacle_last_idx] = MakeObstacle(obstacle_type_index, speed);
     ++obstacle_count;
 }
 
@@ -103,7 +103,7 @@ void UpdateObstacles(uint32_t delta_time, double speed) {
     if (obstacle_count > 0) {
         // TODO: add obstacles if needed
     } else {
-        AddObstacle();
+        AddObstacle(speed);
     }
 }
 

@@ -16,7 +16,8 @@
 #define MAX_CLOUD_LENGTH 6
 #define MAX_OBSTACLE_LENGTH 2
 #define MAX_OBSTACLE_DUPLICATION 2
-#define OBSTACLE_GAP_COEFFICIENT 1.5
+#define OBSTACLE_MIN_GAP_COEFFICIENT 0.6
+#define OBSTACLE_MAX_GAP_COEFFICIENT 1.5
 #define CLOUDS_FREQUENCY 5
 #define CLOUD_SKY_LEVEL_MIN 30
 #define CLOUD_SKY_LEVEL_MAX 71
@@ -25,15 +26,5 @@
 #define DROP_VELOCITY -5
 #define MAX_JUMP_HEIGHT 30
 #define SPEED_DROP_COEFFICIENT 3
-
-typedef struct {
-    int min;
-    int max;
-} Range;
-
-typedef struct {
-    int x;
-    int y;
-} Point;
 
 #endif  // TREX_RUNNER_GLOBALS_H

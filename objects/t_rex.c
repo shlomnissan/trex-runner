@@ -4,6 +4,7 @@
 #include "t_rex.h"
 #include "globals.h"
 #include "spritesheet.h"
+#include "sys/utilities.h"
 #include "sys/graphics.h"
 #include "sys/input.h"
 #include "sys/sounds.h"

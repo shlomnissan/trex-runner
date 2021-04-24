@@ -7,6 +7,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#include "sys/utilities.h"
 #include "globals.h"
 
 typedef struct {

@@ -30,42 +30,59 @@ ObstacleType obstacle_type[] = {
     }
 };
 
-Obstacle* MakeObstacle(int type) {
+int GetGap(Obstacle* obstacle, double speed);
+
+Obstacle* MakeObstacle(int type, double speed) {
     // allocate memory for a new obstacle
     Obstacle* obstacle = (Obstacle*) malloc(sizeof(Obstacle));
-
+    int size = rand() % 3 + 1;
     obstacle->type_config = obstacle_type[type];
     obstacle->sprite_def = sprite_definitions[type];
     obstacle->pos.x = WINDOW_WIDTH - 200;
     obstacle->pos.y = obstacle_type[type].y_pos;
-    obstacle->size = (rand() % 3) + 1;
-    obstacle->gap = 0;
+    obstacle->width = obstacle_type[type].width * size;
+    obstacle->size = size;
     obstacle->speed_offset = 0;
     obstacle->is_visible = true;
+    obstacle->gap = GetGap(obstacle, speed);
 
     return obstacle;
 }
 
 void DrawObstacle(Obstacle* obstacle) {
-    int source_width = obstacle->type_config.width;
     int source_height = obstacle->type_config.height;
-    int texture_width = source_width * obstacle->size;
-    int source_x = source_width * obstacle->size + obstacle->sprite_def.x;
+    int source_x = obstacle->width + obstacle->sprite_def.x;
     Texture texture = {
        .id = 0,
        .source = {
            .x = source_x,
            .y = obstacle->sprite_def.y,
-           .width = texture_width,
+           .width = obstacle->width,
            .height = source_height
        },
        .destination = {
            .x = obstacle->pos.x,
            .y = obstacle->pos.y,
-           .width = texture_width,
+           .width = obstacle->width,
            .height = obstacle->type_config.height
        }
     };
 
     DrawTexture(&texture);
+}
+
+int GetGap(Obstacle* obstacle, double speed) {
+    int min_gap =
+            obstacle->width * speed +
+            obstacle->type_config.min_gap *
+            OBSTACLE_MIN_GAP_COEFFICIENT;
+    int max_gap =
+            min_gap *
+            OBSTACLE_MAX_GAP_COEFFICIENT;
+
+    Range range = {
+        .min = min_gap,
+        .max = max_gap
+    };
+    return RandomFromRange(range);
 }

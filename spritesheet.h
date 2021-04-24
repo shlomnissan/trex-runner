@@ -5,6 +5,7 @@
 #define TREX_RUNNER_SPRITESHEET_H
 
 #include "globals.h"
+#include "sys/utilities.h"
 
 #define CACTUS_SMALL    0
 #define CACTUS_LARGE    1

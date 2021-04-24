@@ -6,6 +6,7 @@
 
 #include <stdbool.h>
 
+#include "sys/utilities.h"
 #include "globals.h"
 
 typedef struct {
@@ -24,12 +25,13 @@ typedef struct {
     Point sprite_def;
     Point pos;
     int size;
+    int width;
     int gap;
     int speed_offset;
     bool is_visible;
 } Obstacle;
 
-Obstacle* MakeObstacle(int type);
+Obstacle* MakeObstacle(int type, double speed);
 
 void UpdateObstacle(Obstacle* obstacle);
 

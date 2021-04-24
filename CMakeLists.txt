@@ -16,6 +16,7 @@ SET(INCLUDE
         sys/input.h
         sys/graphics.h
         sys/sounds.h
+        sys/utilities.h
         objects/t_rex.h
         objects/horizon.h
         objects/horizon_line.h
@@ -31,6 +32,7 @@ set(SOURCE
         sys/input.c
         sys/graphics.c
         sys/sounds.c
+        sys/utilities.c
         objects/t_rex.c
         objects/horizon.c
         objects/horizon_line.c
@@ -38,7 +40,7 @@ set(SOURCE
         objects/clouds.c
         spritesheet.c
         game.c
- )
+)
 
 add_executable(${PROJECT_NAME} main.c ${INCLUDE} ${SOURCE})
 
