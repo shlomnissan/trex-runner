@@ -19,6 +19,7 @@ SET(INCLUDE
         objects/t_rex.h
         objects/horizon.h
         objects/horizon_line.h
+        objects/obstacle.h
         objects/clouds.h
         globals.h
         spritesheet.h
@@ -33,6 +34,7 @@ set(SOURCE
         objects/t_rex.c
         objects/horizon.c
         objects/horizon_line.c
+        objects/obstacle.c
         objects/clouds.c
         spritesheet.c
         game.c

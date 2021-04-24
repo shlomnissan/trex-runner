@@ -6,8 +6,8 @@
 
 #include "globals.h"
 
-#define CACTUS_LARGE    0
-#define CACTUS_SMALL    1
+#define CACTUS_SMALL    0
+#define CACTUS_LARGE    1
 #define CLOUD           2
 #define HORIZON         3
 #define MOON            4

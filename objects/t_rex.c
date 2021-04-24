@@ -44,7 +44,6 @@ AnimFrame tx_anim[] = {
 int tx_width = 44;
 int tx_height = 47;
 int tx_ducking_width = 59;
-int tx_ground_offset = 10;
 int tx_time = 0;
 int tx_curr_frame = 0;
 int tx_ground_pos = 0;
@@ -73,7 +72,7 @@ bool IsJumpKeyPressed();
 void InitTRex() {
     tx_sprite_def = sprite_definitions[TREX];
     tx_anim_frame = tx_anim[tx_state];
-    tx_ground_pos = 150 - tx_height - tx_ground_offset;
+    tx_ground_pos = WINDOW_HEIGHT - tx_height - GROUND_OFFSET;
     tx_pos.x = 50;
     tx_pos.y = tx_ground_pos;
     tx_time = 0;

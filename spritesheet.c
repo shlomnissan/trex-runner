@@ -4,8 +4,8 @@
 #include "spritesheet.h"
 
 Point sprite_definitions[] = {
-    {.x = 332, .y = 2}, // CACTUS_LARGE
     {.x = 228, .y = 2}, // CACTUS_SMALL
+    {.x = 332, .y = 2}, // CACTUS_LARGE
     {.x = 86, .y = 2},  // CLOUD
     {.x = 2, .y = 54},  // HORIZON
     {.x = 484, .y = 2}, // MOON

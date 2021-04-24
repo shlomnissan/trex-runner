@@ -5,8 +5,8 @@
 
 #include "clouds.h"
 #include "globals.h"
-#include "sys/graphics.h"
 #include "spritesheet.h"
+#include "sys/graphics.h"
 
 Range cloud_sky_level_range = {
     .min = CLOUD_SKY_LEVEL_MIN,
@@ -36,6 +36,7 @@ Cloud* MakeCloud() {
 
     // allocate memory for new cloud
     Cloud* cloud = (Cloud*) malloc(sizeof(Cloud));
+
     cloud->pos.x = WINDOW_WIDTH;
     cloud->pos.y = RandomFromRange(cloud_sky_level_range);
     cloud->cloud_gap = RandomFromRange(cloud_gap_range);
