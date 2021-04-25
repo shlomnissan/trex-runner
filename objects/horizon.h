@@ -6,7 +6,7 @@
 
 #include <stdint.h>
 
-#include "obstacle.h"
+#include "sys/graphics.h";
 
 void InitHorizon();
 
@@ -14,7 +14,7 @@ void UpdateHorizon(uint32_t delta_time, double speed);
 
 void DrawHorizon();
 
-Obstacle* GetNearestObstacle();
+CollisionSet GetNearestObstacleCollisionSet();
 
 void FreeHorizonResources();
 

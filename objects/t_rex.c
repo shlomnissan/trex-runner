@@ -5,7 +5,6 @@
 #include "globals.h"
 #include "spritesheet.h"
 #include "sys/utilities.h"
-#include "sys/graphics.h"
 #include "sys/input.h"
 #include "sys/sounds.h"
 
@@ -19,7 +18,7 @@ typedef struct {
     TRexState state;
     Point sprite_def;
     Point pos;
-    AnimFrame anim_frame;
+    AnimationFrames anim_frame;
     double jump_velocity;
     int width;
     int height;
@@ -32,7 +31,7 @@ typedef struct {
     bool reached_min_height;
 } TRex;
 
-AnimFrame trex_animation_frames[] = {
+AnimationFrames trex_animation_frames[] = {
     {
         // waiting
         .frames = {44, 0},
@@ -56,6 +55,28 @@ AnimFrame trex_animation_frames[] = {
         .frames = {264, 323},
         .len = 2,
         .ms_per_frame = 1000 / 8
+    }
+};
+
+CollisionSet trex_collision_sets[] = {
+    {
+        // ducking
+        .len = 1,
+        .rects = {
+            {.x = 1, .y = 18, .width = 55, .height = 25}
+        }
+    },
+    {
+        // running
+        .len = 6,
+        .rects = {
+            {.x = 22, .y = 0, .width = 17, .height = 16},
+            {.x = 1, .y = 18, .width = 30, .height = 9},
+            {.x = 10, .y = 35, .width = 14, .height = 8},
+            {.x = 1, .y = 24, .width = 29, .height = 5},
+            {.x = 5, .y = 30, .width = 21, .height = 4},
+            {.x = 9, .y = 34, .width = 15, .height = 4}
+        }
     }
 };
 
@@ -220,4 +241,16 @@ void DrawTRex() {
         }
     };
     DrawTexture(&texture);
+}
+
+CollisionSet GetTRexCollisionSet() {
+    CollisionSet collision_set = trex_collision_sets[1];
+    if (trex.state == T_REX_DUCKING) {
+        collision_set = trex_collision_sets[0];
+    }
+    for (int i = 0; i < collision_set.len; ++i) {
+        collision_set.rects[i].x += trex.pos.x;
+        collision_set.rects[i].y += trex.pos.y;
+    }
+    return collision_set;
 }

@@ -30,16 +30,14 @@ void Update(uint32_t delta_time) {
 }
 
 bool CollisionTest() {
-    Obstacle* obstacle = GetNearestObstacle();
-    if (obstacle != NULL) {
-        CollisionSet obstacle_collision = obstacle->type.collision_boxes;
-        for (int i = 0; i < obstacle_collision.len; ++i) {
-            obstacle_collision.rects[i].x += obstacle->pos.x;
-            obstacle_collision.rects[i].y += obstacle->pos.y;
-        }
+    CollisionSet obstacle_collision = GetNearestObstacleCollisionSet();
+    CollisionSet trex_collision = GetTRexCollisionSet();
+    if (obstacle_collision.len) {
+        // TODO: return collision sets intersection
 
         if (DEBUG_DRAW) {
             DrawCollisionSet(&obstacle_collision, HexToRGB(0xFF0000));
+            DrawCollisionSet(&trex_collision, HexToRGB(0x0000FF));
         }
     }
     return true;

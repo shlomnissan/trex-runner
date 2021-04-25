@@ -24,7 +24,7 @@ typedef struct {
     int frames[10];
     int len;
     double ms_per_frame;
-} AnimFrame;
+} AnimationFrames;
 
 typedef struct {
     int len;
