@@ -38,12 +38,27 @@ int32_t LoadTexture(char* filename) {
 void DrawTexture(Texture* texture) {
     SDL_Renderer* renderer = GetRenderer();
     if (renderer == NULL) {
-        printf("Unable to draw texture. The window wasn't initialized.\n");
+        printf("Unable to draw texture. The renderer wasn't initialized.\n");
         return;
     }
     SDL_Rect source = SDLRectFromFrame(texture->source);
     SDL_Rect destination = SDLRectFromFrame(texture->destination);
     SDL_RenderCopy(renderer, textures[texture->id], &source, &destination);
+}
+
+void DrawRectangle(Rectangle* rect, RGB color, bool fill) {
+    SDL_Renderer* renderer = GetRenderer();
+    if (renderer == NULL) {
+        printf("Unable to draw rectangle. The renderer wasn't initialized.\n");
+        return;
+    }
+    SDL_Rect r = {
+        .x = rect->x, .y = rect->y,
+        .w = rect->width, .h = rect->height
+    };
+    SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, 255);
+    fill ? SDL_RenderFillRect(renderer, &r) :
+           SDL_RenderDrawRect(renderer, &r);
 }
 
 RGB HexToRGB(int hex_value) {

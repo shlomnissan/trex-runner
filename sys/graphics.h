@@ -5,6 +5,7 @@
 #define TREX_RUNNER_GRAPHICS_H
 
 #include <stdint.h>
+#include <stdbool.h>
 
 typedef struct {
     int x;
@@ -34,6 +35,8 @@ typedef struct {
 int32_t LoadTexture(char* filename);
 
 void DrawTexture(Texture* texture);
+
+void DrawRectangle(Rectangle* rect, RGB color, bool fill);
 
 RGB HexToRGB(int hex_value);
 
