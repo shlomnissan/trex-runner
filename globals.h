@@ -7,6 +7,7 @@
 #define WINDOW_WIDTH 600
 #define WINDOW_HEIGHT 150
 #define WINDOW_TITLE "T-Rex Runner"
+#define FPS 60
 #define GRAVITY 0.6
 #define GROUND_OFFSET 10
 #define SPEED 6

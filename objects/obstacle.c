@@ -38,15 +38,25 @@ Obstacle* MakeObstacle(int type, double speed) {
     int size = rand() % 3 + 1;
     obstacle->type_config = obstacle_type[type];
     obstacle->sprite_def = sprite_definitions[type];
-    obstacle->pos.x = WINDOW_WIDTH - 200;
+    obstacle->pos.x = WINDOW_WIDTH;
     obstacle->pos.y = obstacle_type[type].y_pos;
     obstacle->width = obstacle_type[type].width * size;
     obstacle->size = size;
     obstacle->speed_offset = 0;
+    obstacle->following_obstacle_created = false;
     obstacle->is_visible = true;
     obstacle->gap = GetGap(obstacle, speed);
 
     return obstacle;
+}
+
+void UpdateObstacle(Obstacle* obstacle, uint32_t delta_time, double speed) {
+    int obstacle_speed = (speed * FPS / 1000) * delta_time;
+    obstacle->pos.x -= obstacle_speed;
+
+    if (!IsObstacleVisible(obstacle)) {
+        obstacle->is_visible = false;
+    }
 }
 
 void DrawObstacle(Obstacle* obstacle) {
@@ -69,6 +79,10 @@ void DrawObstacle(Obstacle* obstacle) {
     };
 
     DrawTexture(&texture);
+}
+
+bool IsObstacleVisible(Obstacle* obstacle) {
+    return obstacle->pos.x + obstacle->width > 0;
 }
 
 int GetGap(Obstacle* obstacle, double speed) {

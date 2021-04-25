@@ -6,8 +6,7 @@
 #include "window.h"
 #include "input.h"
 #include "sounds.h"
-
-#define WINDOW_FPS 16.66 // 1000ms / 60fps
+#include "globals.h"
 
 void ClearScreen(uint8_t r, uint8_t g, uint8_t b);
 void Render();
@@ -52,7 +51,7 @@ void StartGameLoop(void (*game_loop)()) {
         tick_now = GetTicks();
         uint32_t delta = tick_now - tick_start;
 
-        if (delta > WINDOW_FPS) {
+        if (delta > FPS / 1000) {
             PollEvents(OnQuit);
             ClearScreen(0xf7, 0xf7, 0xf7);
             game_loop();

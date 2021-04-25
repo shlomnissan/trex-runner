@@ -4,6 +4,7 @@
 #ifndef TREX_RUNNER_OBSTACLE_H
 #define TREX_RUNNER_OBSTACLE_H
 
+#include <stdint.h>
 #include <stdbool.h>
 
 #include "sys/utilities.h"
@@ -28,13 +29,16 @@ typedef struct {
     int width;
     int gap;
     int speed_offset;
+    bool following_obstacle_created;
     bool is_visible;
 } Obstacle;
 
 Obstacle* MakeObstacle(int type, double speed);
 
-void UpdateObstacle(Obstacle* obstacle);
+void UpdateObstacle(Obstacle* obstacle, uint32_t delta_time, double speed);
 
 void DrawObstacle(Obstacle* obstacle);
+
+bool IsObstacleVisible(Obstacle* obstacle);
 
 #endif  // TREX_RUNNER_OBSTACLE_H

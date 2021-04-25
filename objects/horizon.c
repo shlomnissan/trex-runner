@@ -25,6 +25,7 @@ void UpdateClouds(uint32_t delta_time, double speed);
 
 void AddObstacle(double speed);
 void UpdateObstacles(uint32_t delta_time, double speed);
+bool ShouldAddObstacle(Obstacle* last_obstacle);
 
 void InitHorizon() {
     InitHorizonLine();
@@ -39,11 +40,6 @@ void UpdateHorizon(uint32_t delta_time, double speed) {
 
 void DrawHorizon() {
     DrawHorizonLine();
-
-    // TODO: remove drawing test
-    if (obstacles[0] != NULL) {
-        DrawObstacle(obstacles[0]);
-    }
 }
 
 void AddCloud() {
@@ -59,10 +55,8 @@ void AddCloud() {
 void UpdateClouds(uint32_t delta_time, double speed) {
     double this_speed = ceil(cloud_speed / 1000 * delta_time * speed);
 
-    // update clouds
     for (int i = 0; i < MAX_CLOUD_LENGTH; ++i) {
         if (clouds[i] != NULL) {
-            // run update
             UpdateCloud(clouds[i], this_speed);
 
             if (clouds[i]->is_visible) {
@@ -98,13 +92,35 @@ void AddObstacle(double speed) {
 }
 
 void UpdateObstacles(uint32_t delta_time, double speed) {
-    // TODO: update individual obstacles
+    for (int i = 0; i < MAX_OBSTACLE_LENGTH; ++i) {
+        if (obstacles[i] != NULL) {
+            UpdateObstacle(obstacles[i], delta_time, speed);
+
+            if (obstacles[i]->is_visible) {
+                DrawObstacle(obstacles[i]);
+            } else {
+                free(obstacles[i]);
+                --obstacle_count;
+                obstacles[i] = NULL;
+            }
+        }
+    }
 
     if (obstacle_count > 0) {
-        // TODO: add obstacles if needed
+        Obstacle* last_obstacle = obstacles[obstacle_last_idx];
+        if (ShouldAddObstacle(last_obstacle)) {
+            AddObstacle(speed);
+            last_obstacle->following_obstacle_created = true;
+        }
     } else {
         AddObstacle(speed);
     }
+}
+
+bool ShouldAddObstacle(Obstacle* last_obstacle) {
+    return  last_obstacle != NULL &&
+        !last_obstacle->following_obstacle_created &&
+        last_obstacle->pos.x + last_obstacle->width + last_obstacle->gap < WINDOW_WIDTH;
 }
 
 void FreeHorizonResources() {
