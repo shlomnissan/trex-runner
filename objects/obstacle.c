@@ -18,9 +18,12 @@ ObstacleType obstacle_type[] = {
         min_gap: 120,
         min_speed: 0,
         collision_boxes: {
-            {.x = 0, .y = 7, .width = 5, .height = 27},
-            {.x = 4, .y = 0, .width = 6, .height = 34},
-            {.x = 10, .y = 4, .width = 7, .height = 14}
+            .len = 3,
+            .rects = {
+                {.x = 0, .y = 7, .width = 5, .height = 27},
+                {.x = 4, .y = 0, .width = 6, .height = 34},
+                {.x = 10, .y = 4, .width = 7, .height = 14}
+            }
         }
     },
     {
@@ -32,9 +35,12 @@ ObstacleType obstacle_type[] = {
         min_gap: 120,
         min_speed: 0,
         collision_boxes: {
-            {.x = 0, .y = 12, .width = 7, .height = 38},
-            {.x = 8, .y = 0, .width = 7, .height = 49},
-            {.x = 13, .y = 10, .width = 10, .height = 38}
+            .len = 3,
+            .rects = {
+                {.x = 0, .y = 12, .width = 7, .height = 38},
+                {.x = 8, .y = 0, .width = 7, .height = 49},
+                {.x = 13, .y = 10, .width = 10, .height = 38}
+            }
         }
     }
 };
@@ -65,13 +71,13 @@ Obstacle* MakeObstacle(int type, double speed) {
     //   |_|___|_|   |_|_____|_|   |_|_______|_|
 
     if (obstacle->size > 1) {
-        obstacle->type.collision_boxes[1].width =
+        obstacle->type.collision_boxes.rects[1].width =
                 obstacle->width -
-                obstacle->type.collision_boxes[0].width -
-                obstacle->type.collision_boxes[2].width;
-        obstacle->type.collision_boxes[2].x =
+                obstacle->type.collision_boxes.rects[0].width -
+                obstacle->type.collision_boxes.rects[2].width;
+        obstacle->type.collision_boxes.rects[2].x =
                 obstacle->width -
-                obstacle->type.collision_boxes[2].width;
+                obstacle->type.collision_boxes.rects[2].width;
     }
 
     return obstacle;

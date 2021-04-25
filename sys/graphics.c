@@ -61,6 +61,12 @@ void DrawRectangle(Rectangle* rect, RGB color, bool fill) {
            SDL_RenderDrawRect(renderer, &r);
 }
 
+void DrawCollisionSet(CollisionSet* collision_set, RGB color) {
+    for (int i = 0; i < collision_set->len; ++i) {
+        DrawRectangle(&collision_set->rects[i], color, false);
+    }
+}
+
 RGB HexToRGB(int hex_value) {
     RGB rgb;
     rgb.r = ((hex_value >> 16) & 0xFF);

@@ -4,11 +4,14 @@
 #include "game.h"
 #include "sys/window.h"
 #include "globals.h"
+#include "objects/obstacle.h"
 #include "objects/horizon.h"
 #include "objects/t_rex.h"
 
 uint32_t game_time;
 double game_speed = SPEED;
+
+bool CollisionTest();
 
 void InitGame() {
     game_time = 0;
@@ -22,6 +25,24 @@ void Update(uint32_t delta_time) {
     }
     UpdateHorizon(delta_time, game_speed);
     UpdateTRex(delta_time);
+
+    bool collision = CollisionTest();
+}
+
+bool CollisionTest() {
+    Obstacle* obstacle = GetNearestObstacle();
+    if (obstacle != NULL) {
+        CollisionSet obstacle_collision = obstacle->type.collision_boxes;
+        for (int i = 0; i < obstacle_collision.len; ++i) {
+            obstacle_collision.rects[i].x += obstacle->pos.x;
+            obstacle_collision.rects[i].y += obstacle->pos.y;
+        }
+
+        if (DEBUG_DRAW) {
+            DrawCollisionSet(&obstacle_collision, HexToRGB(0xFF0000));
+        }
+    }
+    return true;
 }
 
 void Draw() {

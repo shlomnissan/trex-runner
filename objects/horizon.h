@@ -6,11 +6,15 @@
 
 #include <stdint.h>
 
+#include "obstacle.h"
+
 void InitHorizon();
 
 void UpdateHorizon(uint32_t delta_time, double speed);
 
 void DrawHorizon();
+
+Obstacle* GetNearestObstacle();
 
 void FreeHorizonResources();
 

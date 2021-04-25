@@ -12,7 +12,7 @@
 #include "globals.h"
 
 typedef struct {
-    Rectangle collision_boxes[3];
+    CollisionSet collision_boxes;
     int type;
     int width;
     int height;

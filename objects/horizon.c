@@ -7,7 +7,6 @@
 #include "horizon.h"
 #include "horizon_line.h"
 #include "clouds.h"
-#include "obstacle.h"
 
 Cloud* clouds[MAX_CLOUD_LENGTH] = {NULL};
 Obstacle* obstacles[MAX_OBSTACLE_LENGTH] = {NULL};
@@ -118,9 +117,23 @@ void UpdateObstacles(uint32_t delta_time, double speed) {
 }
 
 bool ShouldAddObstacle(Obstacle* last_obstacle) {
-    return  last_obstacle != NULL &&
+    return last_obstacle != NULL &&
         !last_obstacle->following_obstacle_created &&
         last_obstacle->pos.x + last_obstacle->width + last_obstacle->gap < WINDOW_WIDTH;
+}
+
+Obstacle* GetNearestObstacle() {
+    Obstacle* closest = NULL;
+    int min_x = INT32_MAX;
+    for (int i = 0; i < MAX_OBSTACLE_LENGTH; ++i) {
+        if (obstacles[i] != NULL && obstacles[i]->is_visible) {
+            if (obstacles[i]->pos.x < min_x) {
+                closest = obstacles[i];
+                min_x = closest->pos.x;
+            }
+        }
+    }
+    return closest;
 }
 
 void FreeHorizonResources() {
