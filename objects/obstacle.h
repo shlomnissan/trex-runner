@@ -12,6 +12,7 @@
 #include "globals.h"
 
 typedef struct {
+    Rectangle collision_boxes[3];
     int type;
     int width;
     int height;
@@ -20,8 +21,6 @@ typedef struct {
     int min_gap;
     int min_speed;
     int speed_offset;
-    Rectangle collision_boxes[3];
-
 } ObstacleType;
 
 typedef struct {

@@ -10,12 +10,29 @@
 #include "sys/sounds.h"
 
 typedef enum {
-    RUNNING = 1,
-    JUMPING,
-    DUCKING,
+    T_REX_RUNNING = 1,
+    T_REX_JUMPING,
+    T_REX_DUCKING,
 } TRexState;
 
-AnimFrame tx_anim[] = {
+typedef struct {
+    TRexState state;
+    Point sprite_def;
+    Point pos;
+    AnimFrame anim_frame;
+    double jump_velocity;
+    int width;
+    int height;
+    int ducking_width;
+    int time;
+    int curr_frame;
+    int ground_pos;
+    int min_jump_height;
+    bool speed_drop;
+    bool reached_min_height;
+} TRex;
+
+AnimFrame trex_animation_frames[] = {
     {
         // waiting
         .frames = {44, 0},
@@ -42,25 +59,6 @@ AnimFrame tx_anim[] = {
     }
 };
 
-int tx_width = 44;
-int tx_height = 47;
-int tx_ducking_width = 59;
-int tx_time = 0;
-int tx_curr_frame = 0;
-int tx_ground_pos = 0;
-int tx_min_jump_height = 0;
-
-double tx_jump_velocity = 0.0;
-
-bool tx_speed_drop = false;
-bool tx_reached_min_height = false;
-
-Point tx_sprite_def;
-Point tx_pos;
-
-TRexState tx_state = RUNNING;
-AnimFrame tx_anim_frame;
-
 void UpdateState(TRexState state);
 void HandleControls();
 void UpdateAnimationFrames(uint32_t delta_time);
@@ -73,42 +71,52 @@ void Reset();
 bool IsJumpKeyPressed();
 bool IsDuckKeyPressed();
 
+TRex trex;
+
 void InitTRex() {
-    tx_sprite_def = sprite_definitions[TREX];
-    tx_anim_frame = tx_anim[tx_state];
-    tx_ground_pos = WINDOW_HEIGHT - tx_height - GROUND_OFFSET;
-    tx_pos.x = 50;
-    tx_pos.y = tx_ground_pos;
-    tx_time = 0;
-    tx_min_jump_height = tx_ground_pos - MIN_JUMP_HEIGHT;
+    trex.state = T_REX_RUNNING;
+    trex.width = 44;
+    trex.height = 47;
+    trex.ducking_width = 59;
+    trex.time = 0;
+    trex.curr_frame = 0;
+    trex.ground_pos = WINDOW_HEIGHT - trex.height - GROUND_OFFSET;
+    trex.min_jump_height = trex.ground_pos - MIN_JUMP_HEIGHT;
+    trex.sprite_def = sprite_definitions[TREX];
+    trex.anim_frame = trex_animation_frames[trex.state];
+    trex.pos.x = 50;
+    trex.pos.y = trex.ground_pos;
+    trex.jump_velocity = 0.0;
+    trex.speed_drop = false;
+    trex.reached_min_height = false;
 }
 
 void UpdateTRex(uint32_t delta_time) {
     HandleControls();
     UpdateAnimationFrames(delta_time);
 
-    if (tx_state == JUMPING) {
+    if (trex.state == T_REX_JUMPING) {
         UpdateJump(delta_time);
     }
 }
 
 void HandleControls() {
     // jumping
-    if (tx_state != JUMPING && tx_state != DUCKING && IsJumpKeyPressed()) {
+    if (trex.state != T_REX_JUMPING && trex.state != T_REX_DUCKING && IsJumpKeyPressed()) {
         StartJump();
     }
-    if (tx_state == JUMPING && !IsJumpKeyPressed()) {
+    if (trex.state == T_REX_JUMPING && !IsJumpKeyPressed()) {
         EndJump();
     }
-    if (tx_state == JUMPING && IsDuckKeyPressed() && !tx_speed_drop) {
+    if (trex.state == T_REX_JUMPING && IsDuckKeyPressed() && !trex.speed_drop) {
         SetSpeedDrop();
     }
 
     // ducking
-    if (tx_state == RUNNING && IsDuckKeyPressed()) {
-        UpdateState(DUCKING);
+    if (trex.state == T_REX_RUNNING && IsDuckKeyPressed()) {
+        UpdateState(T_REX_DUCKING);
     }
-    if (tx_state == DUCKING && !IsDuckKeyPressed()) {
+    if (trex.state == T_REX_DUCKING && !IsDuckKeyPressed()) {
         Reset();
     }
 }
@@ -122,93 +130,93 @@ bool IsDuckKeyPressed() {
 }
 
 void UpdateState(TRexState state) {
-    tx_state = state;
-    tx_anim_frame = tx_anim[tx_state];
-    tx_curr_frame = 0;
+    trex.state = state;
+    trex.anim_frame = trex_animation_frames[trex.state];
+    trex.curr_frame = 0;
 }
 
 void StartJump() {
-    UpdateState(JUMPING);
+    UpdateState(T_REX_JUMPING);
     PlaySound(SFX_PRESS);
-    tx_jump_velocity = INITIAL_JUMP_VELOCITY;
+    trex.jump_velocity = INITIAL_JUMP_VELOCITY;
 }
 
 void UpdateJump(uint32_t delta_time) {
-    double ms_per_frame = tx_anim[tx_state].ms_per_frame;
+    double ms_per_frame = trex_animation_frames[trex.state].ms_per_frame;
     double frames_elapsed = delta_time / ms_per_frame;
 
-    if (tx_speed_drop) {
-        tx_pos.y += tx_jump_velocity * SPEED_DROP_COEFFICIENT * frames_elapsed;
+    if (trex.speed_drop) {
+        trex.pos.y += trex.jump_velocity * SPEED_DROP_COEFFICIENT * frames_elapsed;
     } else {
-        tx_pos.y += tx_jump_velocity * frames_elapsed;
+        trex.pos.y += trex.jump_velocity * frames_elapsed;
     }
 
-    tx_jump_velocity += GRAVITY * frames_elapsed;
+    trex.jump_velocity += GRAVITY * frames_elapsed;
 
-    if (tx_pos.y < tx_min_jump_height || tx_speed_drop) {
-        tx_reached_min_height = true;
+    if (trex.pos.y < trex.min_jump_height || trex.speed_drop) {
+        trex.reached_min_height = true;
     }
 
-    if (tx_pos.y < MAX_JUMP_HEIGHT || tx_speed_drop) {
+    if (trex.pos.y < MAX_JUMP_HEIGHT || trex.speed_drop) {
         EndJump();
     }
 
-    if (tx_pos.y > tx_ground_pos) {
+    if (trex.pos.y > trex.ground_pos) {
         Reset();
     }
 }
 
 void EndJump() {
-    if (tx_reached_min_height && tx_jump_velocity < DROP_VELOCITY) {
-        tx_jump_velocity = DROP_VELOCITY;
+    if (trex.reached_min_height && trex.jump_velocity < DROP_VELOCITY) {
+        trex.jump_velocity = DROP_VELOCITY;
     }
 }
 
 void SetSpeedDrop() {
-    tx_speed_drop = true;
-    tx_jump_velocity = 1;
+    trex.speed_drop = true;
+    trex.jump_velocity = 1;
 }
 
 void Reset() {
-    tx_pos.y = tx_ground_pos;
-    tx_jump_velocity = 0;
-    tx_speed_drop = false;
-    tx_reached_min_height = false;
+    trex.pos.y = trex.ground_pos;
+    trex.jump_velocity = 0;
+    trex.speed_drop = false;
+    trex.reached_min_height = false;
 
     if (IsDuckKeyPressed()) {
-        UpdateState(DUCKING);
+        UpdateState(T_REX_DUCKING);
     } else {
-        UpdateState(RUNNING);
+        UpdateState(T_REX_RUNNING);
     }
 }
 
 void UpdateAnimationFrames(uint32_t delta_time) {
-    tx_time += delta_time;
-    if (tx_time >= tx_anim_frame.ms_per_frame) {
-        if (tx_curr_frame == tx_anim_frame.len - 1) {
-            tx_curr_frame = 0;
+    trex.time += delta_time;
+    if (trex.time >= trex.anim_frame.ms_per_frame) {
+        if (trex.curr_frame == trex.anim_frame.len - 1) {
+            trex.curr_frame = 0;
         } else {
-            tx_curr_frame += 1;
+            trex.curr_frame += 1;
         }
-        tx_time = 0;
+        trex.time = 0;
     }
 }
 
 void DrawTRex() {
-    int width = tx_state != DUCKING ? tx_width : tx_ducking_width;
+    int width = trex.state != T_REX_DUCKING ? trex.width : trex.ducking_width;
     Texture texture = {
         .id = 0,
         .source = {
-            .x = tx_sprite_def.x + tx_anim_frame.frames[tx_curr_frame],
-            .y = tx_sprite_def.y,
+            .x = trex.sprite_def.x + trex.anim_frame.frames[trex.curr_frame],
+            .y = trex.sprite_def.y,
             .width = width,
-            .height = tx_height
+            .height = trex.height
         },
         .destination = {
-                .x = tx_pos.x,
-                .y = tx_pos.y,
+                .x = trex.pos.x,
+                .y = trex.pos.y,
                 .width = width,
-                .height = tx_height
+                .height = trex.height
         }
     };
     DrawTexture(&texture);
