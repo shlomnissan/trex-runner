@@ -5,7 +5,6 @@
 
 #include "obstacle.h"
 #include "spritesheet.h"
-#include "sys/graphics.h"
 
 // the type value corresponds to the
 // position in spritesheet_definitions
@@ -17,7 +16,12 @@ ObstacleType obstacle_type[] = {
         y_pos: 105,
         multiple_speed: 4,
         min_gap: 120,
-        min_speed: 0
+        min_speed: 0,
+        collision_boxes: {
+            {.x = 0, .y = 7, .width = 5, .height = 27},
+            {.x = 4, .y = 0, .width = 6, .height = 34},
+            {.x = 10, .y = 4, .width = 7, .height = 14}
+        }
     },
     {
         type: CACTUS_LARGE,
@@ -26,7 +30,12 @@ ObstacleType obstacle_type[] = {
         y_pos: 90,
         multiple_speed: 7,
         min_gap: 120,
-        min_speed: 0
+        min_speed: 0,
+        collision_boxes: {
+            {.x = 0, .y = 12, .width = 7, .height = 38},
+            {.x = 8, .y = 0, .width = 7, .height = 49},
+            {.x = 13, .y = 10, .width = 10, .height = 38}
+        }
     }
 };
 
@@ -36,7 +45,7 @@ Obstacle* MakeObstacle(int type, double speed) {
     // allocate memory for a new obstacle
     Obstacle* obstacle = (Obstacle*) malloc(sizeof(Obstacle));
     int size = rand() % 3 + 1;
-    obstacle->type_config = obstacle_type[type];
+    obstacle->type = obstacle_type[type];
     obstacle->sprite_def = sprite_definitions[type];
     obstacle->pos.x = WINDOW_WIDTH;
     obstacle->pos.y = obstacle_type[type].y_pos;
@@ -46,6 +55,24 @@ Obstacle* MakeObstacle(int type, double speed) {
     obstacle->following_obstacle_created = false;
     obstacle->is_visible = true;
     obstacle->gap = GetGap(obstacle, speed);
+
+    // make collision box adjustments,
+    // central box is adjusted to the size as one box.
+    //      ____        ______        ________
+    //    _|   |-|    _|     |-|    _|       |-|
+    //   | |<->| |   | |<--->| |   | |<----->| |
+    //   | | 1 | |   | |  2  | |   | |   3   | |
+    //   |_|___|_|   |_|_____|_|   |_|_______|_|
+
+    if (obstacle->size > 1) {
+        obstacle->type.collision_boxes[1].width =
+                obstacle->width -
+                obstacle->type.collision_boxes[0].width -
+                obstacle->type.collision_boxes[2].width;
+        obstacle->type.collision_boxes[2].x =
+                obstacle->width -
+                obstacle->type.collision_boxes[2].width;
+    }
 
     return obstacle;
 }
@@ -60,7 +87,7 @@ void UpdateObstacle(Obstacle* obstacle, uint32_t delta_time, double speed) {
 }
 
 void DrawObstacle(Obstacle* obstacle) {
-    int source_height = obstacle->type_config.height;
+    int source_height = obstacle->type.height;
     int source_x = obstacle->width + obstacle->sprite_def.x;
     Texture texture = {
        .id = 0,
@@ -74,7 +101,7 @@ void DrawObstacle(Obstacle* obstacle) {
            .x = obstacle->pos.x,
            .y = obstacle->pos.y,
            .width = obstacle->width,
-           .height = obstacle->type_config.height
+           .height = obstacle->type.height
        }
     };
 
@@ -88,7 +115,7 @@ bool IsObstacleVisible(Obstacle* obstacle) {
 int GetGap(Obstacle* obstacle, double speed) {
     int min_gap =
             obstacle->width * speed +
-            obstacle->type_config.min_gap *
+            obstacle->type.min_gap *
             OBSTACLE_MIN_GAP_COEFFICIENT;
     int max_gap =
             min_gap *

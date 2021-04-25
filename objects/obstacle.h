@@ -8,6 +8,7 @@
 #include <stdbool.h>
 
 #include "sys/utilities.h"
+#include "sys/graphics.h"
 #include "globals.h"
 
 typedef struct {
@@ -19,10 +20,12 @@ typedef struct {
     int min_gap;
     int min_speed;
     int speed_offset;
+    Rectangle collision_boxes[3];
+
 } ObstacleType;
 
 typedef struct {
-    ObstacleType type_config;
+    ObstacleType type;
     Point sprite_def;
     Point pos;
     int size;
