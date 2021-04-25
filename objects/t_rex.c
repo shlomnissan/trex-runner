@@ -48,10 +48,12 @@ int tx_ducking_width = 59;
 int tx_time = 0;
 int tx_curr_frame = 0;
 int tx_ground_pos = 0;
+int tx_min_jump_height = 0;
 
 double tx_jump_velocity = 0.0;
 
 bool tx_speed_drop = false;
+bool tx_reached_min_height = false;
 
 Point tx_sprite_def;
 Point tx_pos;
@@ -69,6 +71,7 @@ void UpdateJump(uint32_t delta_time);
 void Reset();
 
 bool IsJumpKeyPressed();
+bool IsDuckKeyPressed();
 
 void InitTRex() {
     tx_sprite_def = sprite_definitions[TREX];
@@ -77,6 +80,7 @@ void InitTRex() {
     tx_pos.x = 50;
     tx_pos.y = tx_ground_pos;
     tx_time = 0;
+    tx_min_jump_height = tx_ground_pos - MIN_JUMP_HEIGHT;
 }
 
 void UpdateTRex(uint32_t delta_time) {
@@ -96,22 +100,25 @@ void HandleControls() {
     if (tx_state == JUMPING && !IsJumpKeyPressed()) {
         EndJump();
     }
-    if (tx_state == JUMPING && IsKeyPressed(KEY_DOWN) && !tx_speed_drop) {
+    if (tx_state == JUMPING && IsDuckKeyPressed() && !tx_speed_drop) {
         SetSpeedDrop();
     }
 
     // ducking
-    if (tx_state == RUNNING && IsKeyPressed(KEY_DOWN)) {
+    if (tx_state == RUNNING && IsDuckKeyPressed()) {
         UpdateState(DUCKING);
     }
-    if (tx_state == DUCKING && !IsKeyPressed(KEY_DOWN)) {
+    if (tx_state == DUCKING && !IsDuckKeyPressed()) {
         Reset();
     }
 }
 
 bool IsJumpKeyPressed() {
-    return IsKeyPressed(KEY_UP) ||
-           IsKeyPressed(KEY_SPACE);
+    return IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_SPACE);
+}
+
+bool IsDuckKeyPressed() {
+    return IsKeyPressed(KEY_DOWN);
 }
 
 void UpdateState(TRexState state) {
@@ -138,6 +145,10 @@ void UpdateJump(uint32_t delta_time) {
 
     tx_jump_velocity += GRAVITY * frames_elapsed;
 
+    if (tx_pos.y < tx_min_jump_height || tx_speed_drop) {
+        tx_reached_min_height = true;
+    }
+
     if (tx_pos.y < MAX_JUMP_HEIGHT || tx_speed_drop) {
         EndJump();
     }
@@ -148,7 +159,7 @@ void UpdateJump(uint32_t delta_time) {
 }
 
 void EndJump() {
-    if (tx_jump_velocity < DROP_VELOCITY) {
+    if (tx_reached_min_height && tx_jump_velocity < DROP_VELOCITY) {
         tx_jump_velocity = DROP_VELOCITY;
     }
 }
@@ -162,7 +173,13 @@ void Reset() {
     tx_pos.y = tx_ground_pos;
     tx_jump_velocity = 0;
     tx_speed_drop = false;
-    UpdateState(RUNNING);
+    tx_reached_min_height = false;
+
+    if (IsDuckKeyPressed()) {
+        UpdateState(DUCKING);
+    } else {
+        UpdateState(RUNNING);
+    }
 }
 
 void UpdateAnimationFrames(uint32_t delta_time) {
