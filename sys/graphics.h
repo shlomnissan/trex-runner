@@ -11,12 +11,12 @@ typedef struct {
     int y;
     int width;
     int height;
-} Frame;
+} Rectangle;
 
 typedef struct {
     int id;
-    Frame source;
-    Frame destination;
+    Rectangle source;
+    Rectangle destination;
 } Texture;
 
 typedef struct {
@@ -25,9 +25,17 @@ typedef struct {
     double ms_per_frame;
 } AnimFrame;
 
+typedef struct {
+    uint8_t r;
+    uint8_t g;
+    uint8_t b;
+} RGB;
+
 int32_t LoadTexture(char* filename);
 
 void DrawTexture(Texture* texture);
+
+RGB HexToRGB(int hex_value);
 
 void FreeTextures();
 

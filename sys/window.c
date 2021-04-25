@@ -6,10 +6,11 @@
 #include "window.h"
 #include "input.h"
 #include "sounds.h"
+#include "graphics.h"
 #include "globals.h"
 
-void ClearScreen(uint8_t r, uint8_t g, uint8_t b);
 void Render();
+void ClearScreen(RGB color);
 void PrintSDLError();
 void OnQuit();
 bool CreateWindow(char* title, uint32_t width, uint32_t height);
@@ -53,15 +54,15 @@ void StartGameLoop(void (*game_loop)()) {
 
         if (delta > FPS / 1000) {
             PollEvents(OnQuit);
-            ClearScreen(0xf7, 0xf7, 0xf7);
+            ClearScreen(HexToRGB(0xf7f7f7));
             game_loop();
             Render();
         }
     }
 }
 
-void ClearScreen(uint8_t r, uint8_t g, uint8_t b) {
-    SDL_SetRenderDrawColor(renderer, r, g, b, 255);
+void ClearScreen(RGB color) {
+    SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, 255);
     SDL_RenderClear(renderer);
 }
 

@@ -13,7 +13,7 @@
 uint32_t last_texture_id = 0;
 SDL_Texture* textures[MAX_TEXTURES] = {NULL};
 
-SDL_Rect SDLRectFromFrame(Frame frame);
+SDL_Rect SDLRectFromFrame(Rectangle frame);
 
 int32_t LoadTexture(char* filename) {
     if (last_texture_id == MAX_TEXTURES) {
@@ -46,6 +46,14 @@ void DrawTexture(Texture* texture) {
     SDL_RenderCopy(renderer, textures[texture->id], &source, &destination);
 }
 
+RGB HexToRGB(int hex_value) {
+    RGB rgb;
+    rgb.r = ((hex_value >> 16) & 0xFF);
+    rgb.g = ((hex_value >> 8) & 0xFF);
+    rgb.b = hex_value & 0xFF;
+    return rgb;
+}
+
 void FreeTextures() {
     for (int i = 0; i < MAX_TEXTURES; ++i) {
         if (textures[i] != NULL) {
@@ -55,7 +63,7 @@ void FreeTextures() {
     }
 }
 
-SDL_Rect SDLRectFromFrame(Frame frame) {
+SDL_Rect SDLRectFromFrame(Rectangle frame) {
     SDL_Rect output = {
         x: frame.x,
         y: frame.y,
