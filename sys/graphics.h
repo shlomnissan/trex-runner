@@ -7,12 +7,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-typedef struct {
-    int x;
-    int y;
-    int width;
-    int height;
-} Rectangle;
+#include "utilities.h"
 
 typedef struct {
     int id;

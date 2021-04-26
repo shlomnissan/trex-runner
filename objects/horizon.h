@@ -6,7 +6,7 @@
 
 #include <stdint.h>
 
-#include "sys/graphics.h";
+#include "sys/graphics.h"
 
 void InitHorizon();
 
