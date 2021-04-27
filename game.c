@@ -8,6 +8,7 @@
 #include "globals.h"
 #include "objects/horizon.h"
 #include "objects/t_rex.h"
+#include "objects/game_over_panel.h"
 
 typedef enum {
     GAME_INTRO = 0,
@@ -73,6 +74,10 @@ bool CollisionTest() {
 void Draw() {
     DrawHorizon();
     DrawTRex();
+
+    if (game_state == GAME_OVER) {
+        DrawGameOverPanel();
+    }
 }
 
 void RunGame() {
@@ -87,7 +92,6 @@ void GameOver() {
     PlaySound(SFX_HIT);
     game_state = GAME_OVER;
     SetTRexState(T_REX_HIT);
-    // TODO: DrawGameOverPanel
 
     game_time = 0;
 }
