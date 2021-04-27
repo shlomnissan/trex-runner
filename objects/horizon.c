@@ -40,6 +40,17 @@ void UpdateHorizon(uint32_t delta_time, double speed) {
 
 void DrawHorizon() {
     DrawHorizonLine();
+
+    for (int i = 0; i < MAX_CLOUD_LENGTH; ++i) {
+        if (clouds[i] != NULL && clouds[i]->is_visible) {
+            DrawCloud(clouds[i]);
+        }
+    }
+    for (int i = 0; i < MAX_OBSTACLE_LENGTH; ++i) {
+        if (obstacles[i] != NULL && obstacles[i]->is_visible) {
+            DrawObstacle(obstacles[i]);
+        }
+    }
 }
 
 void AddCloud() {
@@ -59,9 +70,7 @@ void UpdateClouds(uint32_t delta_time, double speed) {
         if (clouds[i] != NULL) {
             UpdateCloud(clouds[i], this_speed);
 
-            if (clouds[i]->is_visible) {
-                DrawCloud(clouds[i]);
-            } else {
+            if (!clouds[i]->is_visible) {
                 free(clouds[i]);
                 --cloud_count;
                 clouds[i] = NULL;
@@ -96,9 +105,7 @@ void UpdateObstacles(uint32_t delta_time, double speed) {
         if (obstacles[i] != NULL) {
             UpdateObstacle(obstacles[i], delta_time, speed);
 
-            if (obstacles[i]->is_visible) {
-                DrawObstacle(obstacles[i]);
-            } else {
+            if (!obstacles[i]->is_visible) {
                 free(obstacles[i]);
                 --obstacle_count;
                 obstacles[i] = NULL;

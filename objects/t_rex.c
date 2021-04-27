@@ -8,12 +8,6 @@
 #include "sys/input.h"
 #include "sys/sounds.h"
 
-typedef enum {
-    T_REX_RUNNING = 1,
-    T_REX_JUMPING,
-    T_REX_DUCKING,
-} TRexState;
-
 typedef struct {
     TRexState state;
     Point sprite_def;
@@ -55,6 +49,12 @@ AnimationFrames trex_animation_frames[] = {
         .frames = {264, 323},
         .len = 2,
         .ms_per_frame = 1000 / 8
+    },
+    {
+        // crashed
+        .frames = {220},
+        .len = 1,
+        .ms_per_frame = 1000 / 60
     }
 };
 
@@ -80,7 +80,6 @@ CollisionSet trex_collision_sets[] = {
     }
 };
 
-void UpdateState(TRexState state);
 void HandleControls();
 void UpdateAnimationFrames(uint32_t delta_time);
 void StartJump();
@@ -135,7 +134,7 @@ void HandleControls() {
 
     // ducking
     if (trex.state == T_REX_RUNNING && IsDuckKeyPressed()) {
-        UpdateState(T_REX_DUCKING);
+        SetTRexState(T_REX_DUCKING);
     }
     if (trex.state == T_REX_DUCKING && !IsDuckKeyPressed()) {
         Reset();
@@ -150,14 +149,14 @@ bool IsDuckKeyPressed() {
     return IsKeyPressed(KEY_DOWN);
 }
 
-void UpdateState(TRexState state) {
+void SetTRexState(TRexState state) {
     trex.state = state;
     trex.anim_frame = trex_animation_frames[trex.state];
     trex.curr_frame = 0;
 }
 
 void StartJump() {
-    UpdateState(T_REX_JUMPING);
+    SetTRexState(T_REX_JUMPING);
     PlaySound(SFX_PRESS);
     trex.jump_velocity = INITIAL_JUMP_VELOCITY;
 }
@@ -205,9 +204,9 @@ void Reset() {
     trex.reached_min_height = false;
 
     if (IsDuckKeyPressed()) {
-        UpdateState(T_REX_DUCKING);
+        SetTRexState(T_REX_DUCKING);
     } else {
-        UpdateState(T_REX_RUNNING);
+        SetTRexState(T_REX_RUNNING);
     }
 }
 
