@@ -16,32 +16,44 @@ typedef enum {
     GAME_OVER
 } GameState;
 
-uint32_t game_time;
-GameState game_state;
-double game_speed = SPEED;
+typedef struct {
+    GameState state;
+    double speed;
+    double distance_ran;
+    int highest_score;
+    int time;
+} Game;
+
+Game game = {
+    .state = GAME_PLAY,
+    .speed = SPEED,
+    .distance_ran = 0,
+    .highest_score = 0,
+    .time = 0
+};
 
 bool CollisionTest();
 
 void GameOver();
 
 void InitGame() {
-    game_time = 0;
-    game_state = GAME_PLAY;
     InitHorizon();
     InitTRex();
 }
 
 void Update(uint32_t delta_time) {
-    if (game_state == GAME_PLAY) {
-        if (game_speed < MAX_SPEED) {
-            game_speed += ACCELERATION;
-        }
-        UpdateHorizon(delta_time, game_speed);
+    if (game.state == GAME_PLAY) {
+        UpdateHorizon(delta_time, game.speed);
         UpdateTRex(delta_time);
 
         bool collision = CollisionTest();
         if (collision) {
             GameOver();
+        } else {
+            if (game.speed < MAX_SPEED) {
+                game.speed += ACCELERATION;
+            }
+            game.distance_ran += game.speed * delta_time / (1000 / FPS);
         }
     } else {
         // TODO: handle input
@@ -75,25 +87,26 @@ void Draw() {
     DrawHorizon();
     DrawTRex();
 
-    if (game_state == GAME_OVER) {
+    if (game.state == GAME_OVER) {
         DrawGameOverPanel();
     }
 }
 
 void RunGame() {
     uint32_t now = GetTicks();
-    uint32_t delta_time = now - game_time;
-    game_time = now;
+    uint32_t delta_time = now - game.time;
+    game.time = now;
     Update(delta_time);
     Draw();
 }
 
 void GameOver() {
     PlaySound(SFX_HIT);
-    game_state = GAME_OVER;
+    game.state = GAME_OVER;
     SetTRexState(T_REX_HIT);
-
-    game_time = 0;
+    if (game.distance_ran > game.highest_score) {
+        game.highest_score = (int)game.distance_ran;
+    }
 }
 
 void DestroyGame() {
