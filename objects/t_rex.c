@@ -25,6 +25,8 @@ typedef struct {
     bool reached_min_height;
 } TRex;
 
+TRex trex;
+
 AnimationFrames trex_animation_frames[] = {
     {
         // waiting
@@ -90,8 +92,6 @@ void Reset();
 
 bool IsJumpKeyPressed();
 bool IsDuckKeyPressed();
-
-TRex trex;
 
 void InitTRex() {
     trex.state = T_REX_RUNNING;
