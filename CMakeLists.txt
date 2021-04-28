@@ -23,6 +23,7 @@ SET(INCLUDE
     objects/obstacle.h
     objects/clouds.h
     objects/game_over_panel.h
+    objects/distance_meter.h
     globals.h
     spritesheet.h
     game.h
@@ -40,6 +41,7 @@ set(SOURCE
     objects/obstacle.c
     objects/clouds.c
     objects/game_over_panel.c
+    objects/distance_meter.c
     spritesheet.c
     game.c
 )

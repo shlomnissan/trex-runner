@@ -9,6 +9,7 @@
 #include "objects/horizon.h"
 #include "objects/t_rex.h"
 #include "objects/game_over_panel.h"
+#include "objects/distance_meter.h"
 
 typedef enum {
     GAME_INTRO = 0,
@@ -37,11 +38,13 @@ bool CollisionTest();
 void GameOver();
 
 void InitGame() {
+    InitDistanceMeter();
     InitHorizon();
     InitTRex();
 }
 
 void Update(uint32_t delta_time) {
+    UpdateDistanceMeter(delta_time, game.distance_ran);
     if (game.state == GAME_PLAY) {
         UpdateHorizon(delta_time, game.speed);
         UpdateTRex(delta_time);
