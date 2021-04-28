@@ -1,7 +1,7 @@
 // Copyright 2021 Betamark Pty Ltd. All rights reserved.
 // Author: Shlomi Nissan (shlomi@betamark.com)
 
-#include <stdlib.h>
+#include <math.h>
 #include "distance_meter.h"
 #include "spritesheet.h"
 #include "sys/utilities.h"
@@ -10,7 +10,7 @@
 typedef struct {
     Point sprite_def;
     Point pos;
-    int max_distance_units;
+    int max_digits;
     int width;
     int height;
     int dest_width;
@@ -21,9 +21,9 @@ typedef struct {
 DistanceMeter distance_meter = {
     .pos = {
         .x = 0,
-        .y = 5
+        .y = 10
     },
-    .max_distance_units = MAX_DISTANCE_UNITS,
+    .max_digits = MAX_DISTANCE_UNITS,
     .width = 10,
     .height = 13,
     .dest_width = 11,
@@ -32,17 +32,21 @@ DistanceMeter distance_meter = {
 
 int GetActualDistance(double distance);
 void DrawDistanceMeterDigit(int digit_pos, int value);
+void ResetXPos();
 
 void InitDistanceMeter() {
     distance_meter.sprite_def = sprite_definitions[TEXT_SPRITE];
-    char max_distance_string[distance_meter.max_distance_units];
-    for (int i = 0; i < distance_meter.max_distance_units; ++i) {
+    for (int i = 0; i < distance_meter.max_digits; ++i) {
         DrawDistanceMeterDigit(i, 0);
         distance_meter.default_string[i] = '0';
-        max_distance_string[i] = '9';
     }
-    distance_meter.max_score = atoi(max_distance_string);
-    distance_meter.pos.x = WINDOW_WIDTH - (distance_meter.dest_width * (distance_meter.max_distance_units + 1));
+    distance_meter.max_score = pow(10, distance_meter.max_digits) - 1;
+    ResetXPos();
+}
+
+void ResetXPos() {
+    distance_meter.pos.x = WINDOW_WIDTH -
+            (distance_meter.dest_width * (distance_meter.max_digits + 1));
 }
 
 void DrawDistanceMeterDigit(int digit_pos, int value) {
@@ -75,11 +79,16 @@ void DrawDistanceMeterDigit(int digit_pos, int value) {
 void UpdateDistanceMeter(uint32_t delta_time, double distance) {
     int actual_distance = GetActualDistance(distance);
 
-    // TODO: handle max distance overflow
+    if (actual_distance > distance_meter.max_score) {
+        // score has gone beyond the initial digit count
+        ++distance_meter.max_digits;
+        distance_meter.max_score = distance_meter.max_score * 10 + 9;
+        ResetXPos();
+    }
 
     // TODO: add achievements
 
-    for (int i = distance_meter.max_distance_units - 1; i >= 0; --i) {
+    for (int i = distance_meter.max_digits - 1; i >= 0; --i) {
         int digit = 0;
         if (actual_distance != 0) {
             digit = actual_distance % 10;
