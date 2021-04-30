@@ -44,7 +44,8 @@ void InitGame() {
 }
 
 void Update(uint32_t delta_time) {
-    UpdateDistanceMeter(delta_time, game.distance_ran);
+    bool play_sound = UpdateDistanceMeter(delta_time, game.distance_ran);
+
     if (game.state == GAME_PLAY) {
         UpdateHorizon(delta_time, game.speed);
         UpdateTRex(delta_time);
@@ -60,6 +61,10 @@ void Update(uint32_t delta_time) {
         }
     } else {
         // TODO: handle input
+    }
+
+    if (play_sound) {
+        PlaySound(SFX_REACHED);
     }
 }
 

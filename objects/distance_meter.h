@@ -4,11 +4,12 @@
 #ifndef TREX_RUNNER_DISTANCE_METER_H
 #define TREX_RUNNER_DISTANCE_METER_H
 
+#include <stdbool.h>
 #include <stdint.h>
 
 void InitDistanceMeter();
 
-void UpdateDistanceMeter(uint32_t delta_time, double distance);
+bool UpdateDistanceMeter(uint32_t delta_time, double distance);
 
 void SetDistanceMeterHighScore(int high_score);
 

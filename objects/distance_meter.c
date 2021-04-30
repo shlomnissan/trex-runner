@@ -2,6 +2,7 @@
 // Author: Shlomi Nissan (shlomi@betamark.com)
 
 #include <math.h>
+
 #include "distance_meter.h"
 #include "spritesheet.h"
 #include "sys/utilities.h"
@@ -29,6 +30,11 @@ DistanceMeter distance_meter = {
     .dest_width = 11,
     .default_string = ""
 };
+
+bool achievement = false;
+uint32_t last_distance = 0;
+uint32_t flash_iterations = 0;
+uint32_t flash_timer = 0;
 
 int GetActualDistance(double distance);
 void DrawDistanceMeterDigit(int digit_pos, int value);
@@ -76,26 +82,57 @@ void DrawDistanceMeterDigit(int digit_pos, int value) {
     DrawTexture(&texture);
 }
 
-void UpdateDistanceMeter(uint32_t delta_time, double distance) {
-    int actual_distance = GetActualDistance(distance);
+bool UpdateDistanceMeter(uint32_t delta_time, double distance) {
+    bool paint = true;
+    bool play_sound = false;
 
-    if (actual_distance > distance_meter.max_score) {
-        // score has gone beyond the initial digit count
-        ++distance_meter.max_digits;
-        distance_meter.max_score = distance_meter.max_score * 10 + 9;
-        ResetXPos();
-    }
+    if (!achievement) {
+        int actual_distance = GetActualDistance(distance);
 
-    // TODO: add achievements
-
-    for (int i = distance_meter.max_digits - 1; i >= 0; --i) {
-        int digit = 0;
-        if (actual_distance != 0) {
-            digit = actual_distance % 10;
-            actual_distance /= 10;
+        if (actual_distance > distance_meter.max_score) {
+            // score has gone beyond the initial digit count
+            ++distance_meter.max_digits;
+            distance_meter.max_score = distance_meter.max_score * 10 + 9;
+            ResetXPos();
         }
-        DrawDistanceMeterDigit(i, digit);
+
+        if (actual_distance > 0) {
+            if (actual_distance % ACHIEVEMENT_DISTANCE == 0) {
+                achievement = true;
+                play_sound = true;
+            }
+        }
+
+        last_distance = actual_distance;
+    } else {
+        if (flash_iterations <= DISTANCE_FLASH_ITERATIONS) {
+            flash_timer += delta_time;
+            if (flash_timer < DISTANCE_FLASH_DURATION) {
+                paint = false;
+            } else if (flash_timer > DISTANCE_FLASH_DURATION * 2) {
+                flash_timer = 0;
+                ++flash_iterations;
+            }
+        } else {
+            achievement = false;
+            flash_iterations = 0;
+            flash_timer = 0;
+        }
     }
+
+    if (paint) {
+        int digits = last_distance;
+        for (int i = distance_meter.max_digits - 1; i >= 0; --i) {
+            int digit = 0;
+            if (digits != 0) {
+                digit = digits % 10;
+                digits /= 10;
+            }
+            DrawDistanceMeterDigit(i, digit);
+        }
+    }
+
+    return play_sound;
 }
 
 int GetActualDistance(double distance) {
