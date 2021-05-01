@@ -32,10 +32,13 @@ void InitHorizon() {
     AddCloud();
 }
 
-void UpdateHorizon(uint32_t delta_time, double speed) {
+void UpdateHorizon(uint32_t delta_time, double speed, bool has_obstacles) {
     UpdateHorizonLine(delta_time, speed);
     UpdateClouds(delta_time, speed);
-    UpdateObstacles(delta_time, speed);
+
+    if (has_obstacles) {
+        UpdateObstacles(delta_time, speed);
+    }
 }
 
 void DrawHorizon() {
@@ -152,6 +155,16 @@ CollisionSet GetNearestObstacleCollisionSet() {
     }
 
     return collision_set;
+}
+
+void ResetHorizon() {
+    for (int i = 0; i < MAX_OBSTACLE_LENGTH; ++i) {
+        if (obstacles[i] != NULL) {
+            free(obstacles[i]);
+            obstacles[i] = NULL;
+        }
+    }
+    obstacle_count = 0;
 }
 
 void FreeHorizonResources() {

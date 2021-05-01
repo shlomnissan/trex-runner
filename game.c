@@ -5,6 +5,7 @@
 #include "sys/window.h"
 #include "sys/utilities.h"
 #include "sys/sounds.h"
+#include "sys/input.h"
 #include "globals.h"
 #include "objects/horizon.h"
 #include "objects/t_rex.h"
@@ -21,6 +22,9 @@ typedef struct {
     GameState state;
     double speed;
     double distance_ran;
+    int running_time;
+    int game_played;
+    int game_over_time;
     int highest_score;
     int time;
 } Game;
@@ -29,25 +33,31 @@ Game game = {
     .state = GAME_PLAY,
     .speed = SPEED,
     .distance_ran = 0,
+    .game_over_time = 0,
     .highest_score = 0,
     .time = 0
 };
 
 bool CollisionTest();
-
 void GameOver();
+void Restart();
+void OnKeyUp(char key);
 
 void InitGame() {
     InitDistanceMeter();
     InitHorizon();
     InitTRex();
+
+    SetOnKeyUp(&OnKeyUp);
 }
 
 void Update(uint32_t delta_time) {
     bool play_sound = UpdateDistanceMeter(delta_time, game.distance_ran);
-
     if (game.state == GAME_PLAY) {
-        UpdateHorizon(delta_time, game.speed);
+        game.running_time += delta_time;
+
+        bool has_obstacles = game.running_time > CLEAR_TIME;
+        UpdateHorizon(delta_time, game.speed, has_obstacles);
         UpdateTRex(delta_time);
 
         bool collision = CollisionTest();
@@ -59,12 +69,21 @@ void Update(uint32_t delta_time) {
             }
             game.distance_ran += game.speed * delta_time / (1000 / FPS);
         }
-    } else {
-        // TODO: handle input
+    } else if (game.state == GAME_OVER){
+        game.game_over_time += delta_time;
     }
 
     if (play_sound) {
         PlaySound(SFX_REACHED);
+    }
+}
+
+void OnKeyUp(char key) {
+    // restart game
+    if (game.state == GAME_OVER &&
+        game.game_over_time > GAME_OVER_CLEAR_TIME &&
+        (key == KEY_UP || key == KEY_SPACE)) {
+        Restart();
     }
 }
 
@@ -116,6 +135,20 @@ void GameOver() {
         game.highest_score = (int)game.distance_ran;
         SetDistanceMeterHighScore(game.highest_score);
     }
+}
+
+void Restart() {
+    game.distance_ran = 0.0;
+    game.running_time = 0;
+    game.speed = SPEED;
+    game.game_over_time = 0;
+    game.state = GAME_PLAY;
+    game.time = GetTicks();
+
+    ResetTRex();
+    ResetDistanceMeter();
+    ResetHorizon();
+    PlaySound(SFX_PRESS);
 }
 
 void DestroyGame() {

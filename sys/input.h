@@ -12,6 +12,8 @@
 
 void PollEvents(void (*on_quit)());
 
-bool IsKeyPressed(char key);
+bool IsKeyDown(char key);
+
+void SetOnKeyUp(void (*on_key_up)(char key));
 
 #endif  // TREX_RUNNER_INPUT_H

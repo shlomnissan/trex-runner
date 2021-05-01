@@ -23,6 +23,8 @@ void SetTRexState(TRexState state);
 
 void DrawTRex();
 
+void ResetTRex();
+
 CollisionSet GetTRexCollisionSet();
 
 #endif  // TREX_RUNNER_T_REX_H

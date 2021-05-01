@@ -16,7 +16,6 @@ typedef struct {
     int height;
     int dest_width;
     int max_score;
-    char default_string[10];
 } DistanceMeter;
 
 DistanceMeter distance_meter = {
@@ -28,7 +27,6 @@ DistanceMeter distance_meter = {
     .width = 10,
     .height = 13,
     .dest_width = 11,
-    .default_string = ""
 };
 
 bool achievement = false;
@@ -47,7 +45,6 @@ void InitDistanceMeter() {
     distance_meter.sprite_def = sprite_definitions[TEXT_SPRITE];
     for (int i = 0; i < distance_meter.max_digits; ++i) {
         DrawDistanceMeterDigit(i, 0, false);
-        distance_meter.default_string[i] = '0';
     }
     distance_meter.max_score = pow(10, distance_meter.max_digits) - 1;
     ResetXPos();

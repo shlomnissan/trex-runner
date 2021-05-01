@@ -88,7 +88,6 @@ void StartJump();
 void EndJump();
 void SetSpeedDrop();
 void UpdateJump(uint32_t delta_time);
-void Reset();
 
 bool IsJumpKeyPressed();
 bool IsDuckKeyPressed();
@@ -137,16 +136,16 @@ void HandleControls() {
         SetTRexState(T_REX_DUCKING);
     }
     if (trex.state == T_REX_DUCKING && !IsDuckKeyPressed()) {
-        Reset();
+        ResetTRex();
     }
 }
 
 bool IsJumpKeyPressed() {
-    return IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_SPACE);
+    return IsKeyDown(KEY_UP) || IsKeyDown(KEY_SPACE);
 }
 
 bool IsDuckKeyPressed() {
-    return IsKeyPressed(KEY_DOWN);
+    return IsKeyDown(KEY_DOWN);
 }
 
 void SetTRexState(TRexState state) {
@@ -182,7 +181,7 @@ void UpdateJump(uint32_t delta_time) {
     }
 
     if (trex.pos.y > trex.ground_pos) {
-        Reset();
+        ResetTRex();
     }
 }
 
@@ -197,7 +196,7 @@ void SetSpeedDrop() {
     trex.jump_velocity = 1;
 }
 
-void Reset() {
+void ResetTRex() {
     trex.pos.y = trex.ground_pos;
     trex.jump_velocity = 0;
     trex.speed_drop = false;
