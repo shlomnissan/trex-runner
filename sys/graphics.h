@@ -40,6 +40,8 @@ void DrawRectangle(Rectangle* rect, RGB color, bool fill);
 
 void DrawCollisionSet(CollisionSet* collision_set, RGB color);
 
+void SetTextureAlpha(int texture_id, uint8_t alpha);
+
 RGB HexToRGB(int hex_value);
 
 void FreeTextures();
