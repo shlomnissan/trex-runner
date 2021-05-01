@@ -11,7 +11,7 @@ void InitDistanceMeter();
 
 bool UpdateDistanceMeter(uint32_t delta_time, double distance);
 
-void SetDistanceMeterHighScore(int high_score);
+void SetDistanceMeterHighScore(int score);
 
 void ResetDistanceMeter();
 

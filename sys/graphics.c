@@ -61,8 +61,8 @@ void DrawRectangle(Rectangle* rect, RGB color, bool fill) {
            SDL_RenderDrawRect(renderer, &r);
 }
 
-void SetTextureAlpha(int texture_id, uint8_t alpha) {
-    SDL_SetTextureAlphaMod(textures[texture_id], alpha);
+void SetTextureAlpha(int texture_id, double alpha) {
+    SDL_SetTextureAlphaMod(textures[texture_id], alpha * 255);
 }
 
 void DrawCollisionSet(CollisionSet* collision_set, RGB color) {

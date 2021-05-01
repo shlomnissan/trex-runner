@@ -32,18 +32,21 @@ DistanceMeter distance_meter = {
 };
 
 bool achievement = false;
+int high_score = 0;
 uint32_t last_distance = 0;
 uint32_t flash_iterations = 0;
 uint32_t flash_timer = 0;
 
 int GetActualDistance(double distance);
-void DrawDistanceMeterDigit(int digit_pos, int value);
+void DrawDistanceMeterDigit(int digit_pos, int value, bool opt_high_score);
+void DrawScore(int score, bool opt_max_score);
+void DrawHighScore();
 void ResetXPos();
 
 void InitDistanceMeter() {
     distance_meter.sprite_def = sprite_definitions[TEXT_SPRITE];
     for (int i = 0; i < distance_meter.max_digits; ++i) {
-        DrawDistanceMeterDigit(i, 0);
+        DrawDistanceMeterDigit(i, 0, false);
         distance_meter.default_string[i] = '0';
     }
     distance_meter.max_score = pow(10, distance_meter.max_digits) - 1;
@@ -55,14 +58,20 @@ void ResetXPos() {
             (distance_meter.dest_width * (distance_meter.max_digits + 1));
 }
 
-void DrawDistanceMeterDigit(int digit_pos, int value) {
+void DrawDistanceMeterDigit(int digit_pos, int value, bool opt_high_score) {
     int source_x = distance_meter.width * value;
     int source_y = 0;
     int target_x = digit_pos * distance_meter.dest_width;
     int target_y = distance_meter.pos.y;
+    int offset_x = distance_meter.pos.x;
 
     source_x += distance_meter.sprite_def.x;
     source_y += distance_meter.sprite_def.y;
+
+    if (opt_high_score) {
+        SetTextureAlpha(0, 0.8);
+        offset_x -= (distance_meter.max_digits + 2) * distance_meter.width;
+    }
 
     Texture texture = {
         .id = 0,
@@ -73,13 +82,17 @@ void DrawDistanceMeterDigit(int digit_pos, int value) {
             .height = distance_meter.height
         },
         .destination = {
-            .x = target_x + distance_meter.pos.x,
+            .x = target_x + offset_x,
             .y = target_y,
             .width = distance_meter.width,
             .height = distance_meter.height
         }
     };
     DrawTexture(&texture);
+
+    if (opt_high_score) {
+        SetTextureAlpha(0, 1);
+    }
 }
 
 bool UpdateDistanceMeter(uint32_t delta_time, double distance) {
@@ -121,28 +134,45 @@ bool UpdateDistanceMeter(uint32_t delta_time, double distance) {
     }
 
     if (paint) {
-        int digits = last_distance;
-        for (int i = distance_meter.max_digits - 1; i >= 0; --i) {
-            int digit = 0;
-            if (digits != 0) {
-                digit = digits % 10;
-                digits /= 10;
-            }
-            DrawDistanceMeterDigit(i, digit);
-        }
+        DrawScore(last_distance, false);
+    }
+
+    if (high_score) {
+        DrawHighScore();
     }
 
     return play_sound;
+}
+
+void DrawScore(int digits, bool opt_max_score) {
+    for (int i = distance_meter.max_digits - 1; i >= 0; --i) {
+        int digit = 0;
+        if (digits != 0) {
+            digit = digits % 10;
+            digits /= 10;
+        }
+        DrawDistanceMeterDigit(i, digit, opt_max_score);
+    }
+}
+
+void DrawHighScore() {
+    DrawDistanceMeterDigit(-3, 10, true); // H
+    DrawDistanceMeterDigit(-2, 11, true); // I
+    DrawDistanceMeterDigit(-1, 12, true); // space
+    DrawScore(high_score, true);
 }
 
 int GetActualDistance(double distance) {
     return distance ? (int)(distance * DISTANCE_COEFFICIENT) : 0;
 }
 
-void SetDistanceMeterHighScore(int high_score) {
-    // TODO: impl
+void SetDistanceMeterHighScore(int score) {
+    high_score = GetActualDistance(score);
 }
 
 void ResetDistanceMeter() {
-    // TODO: impl
+    achievement = false;
+    flash_iterations = 0;
+    flash_timer = 0;
+    last_distance = 0;
 }

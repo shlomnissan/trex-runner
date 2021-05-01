@@ -114,6 +114,7 @@ void GameOver() {
     SetTRexState(T_REX_HIT);
     if (game.distance_ran > game.highest_score) {
         game.highest_score = (int)game.distance_ran;
+        SetDistanceMeterHighScore(game.highest_score);
     }
 }
 
