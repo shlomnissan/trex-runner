@@ -22,7 +22,7 @@ double cloud_speed = 0.2;
 
 void AddCloud();
 void UpdateClouds(uint32_t delta_time, double speed);
-
+Obstacle* GetNearestObstacle();
 void AddObstacle(double speed);
 void UpdateObstacles(uint32_t delta_time, double speed);
 bool ShouldAddObstacle(Obstacle* last_obstacle);
@@ -133,7 +133,26 @@ bool ShouldAddObstacle(Obstacle* last_obstacle) {
         last_obstacle->pos.x + last_obstacle->width + last_obstacle->gap < WINDOW_WIDTH;
 }
 
-CollisionSet GetNearestObstacleCollisionSet() {
+Rectangle GetNearestObstacleFrame() {
+    Rectangle frame = {
+        .x = 0,
+        .y = 0,
+        .width = 0,
+        .height = 0
+    };
+
+    Obstacle* nearest = GetNearestObstacle();
+    if (nearest == NULL) return frame;
+
+    frame.x = nearest->pos.x;
+    frame.y = nearest->pos.y;
+    frame.width = nearest->width;
+    frame.height = nearest->type.height;
+
+    return frame;
+}
+
+Obstacle* GetNearestObstacle() {
     Obstacle* nearest = NULL;
     int min_x = INT32_MAX;
     for (int i = 0; i < MAX_OBSTACLE_LENGTH; ++i) {
@@ -144,7 +163,11 @@ CollisionSet GetNearestObstacleCollisionSet() {
             }
         }
     }
+    return nearest;
+}
 
+CollisionSet GetNearestObstacleCollisionSet() {
+    Obstacle* nearest = GetNearestObstacle();
     CollisionSet collision_set = {.len = 0, .rects = {}};
     if (nearest == NULL) return collision_set;
 

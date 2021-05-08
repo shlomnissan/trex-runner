@@ -241,6 +241,16 @@ void DrawTRex() {
     DrawTexture(&texture);
 }
 
+Rectangle GetTRexFrame() {
+    Rectangle frame = {
+        .x = trex.pos.x,
+        .y = trex.pos.y,
+        .width = trex.width,
+        .height = trex.height
+    };
+    return frame;
+}
+
 CollisionSet GetTRexCollisionSet() {
     CollisionSet collision_set = trex_collision_sets[1];
     if (trex.state == T_REX_DUCKING) {

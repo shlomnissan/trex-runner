@@ -14,6 +14,8 @@ void UpdateHorizon(uint32_t delta_time, double speed, bool has_obstacles);
 
 void DrawHorizon();
 
+Rectangle GetNearestObstacleFrame();
+
 CollisionSet GetNearestObstacleCollisionSet();
 
 void ResetHorizon();

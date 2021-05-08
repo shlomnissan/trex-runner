@@ -88,25 +88,47 @@ void OnKeyUp(char key) {
 }
 
 bool CollisionTest() {
-    CollisionSet obstacle_collision = GetNearestObstacleCollisionSet();
-    CollisionSet trex_collision = GetTRexCollisionSet();
-    if (obstacle_collision.len) {
-        for (int i = 0; i < trex_collision.len; ++i) {
-            for (int j = 0; j < obstacle_collision.len; ++j) {
-                if (RectanglesIntersect(
-                    &trex_collision.rects[i],
-                    &obstacle_collision.rects[j])
-                ) {
-                    return true;
+    Rectangle trex_frame = GetTRexFrame();
+    Rectangle obstacle_frame = GetNearestObstacleFrame();
+
+    // adjustments are made to the bounding box as there is a 1 pixel white
+    // border around the t-rex and obstacles
+    trex_frame.x += 1;
+    trex_frame.y += 1;
+    trex_frame.width -= 2;
+    trex_frame.height -= 2;
+
+    obstacle_frame.x += 1;
+    obstacle_frame.y += 1;
+    obstacle_frame.width -= 2;
+    obstacle_frame.height -= 2;
+
+    if (DEBUG_DRAW) {
+        // debug outer boxes
+        DrawRectangle(&trex_frame, HexToRGB(0xFF0000), false);
+        DrawRectangle(&obstacle_frame, HexToRGB(0x0000FF), false);
+    }
+
+    // simple outer bounds check
+    if (RectanglesIntersect(&trex_frame, &obstacle_frame)) {
+        CollisionSet obstacle_collision = GetNearestObstacleCollisionSet();
+        CollisionSet trex_collision = GetTRexCollisionSet();
+        if (obstacle_collision.len) {
+            // detailed axis aligned box check
+            for (int i = 0; i < trex_collision.len; ++i) {
+                for (int j = 0; j < obstacle_collision.len; ++j) {
+                    if (RectanglesIntersect(
+                            &trex_collision.rects[i],
+                            &obstacle_collision.rects[j])
+                        ) {
+                        return true;
+                    }
                 }
             }
         }
-
-        if (DEBUG_DRAW) {
-            DrawCollisionSet(&obstacle_collision, HexToRGB(0xFF0000));
-            DrawCollisionSet(&trex_collision, HexToRGB(0x0000FF));
-        }
     }
+
+
     return false;
 }
 

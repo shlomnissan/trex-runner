@@ -25,6 +25,8 @@ void DrawTRex();
 
 void ResetTRex();
 
+Rectangle GetTRexFrame();
+
 CollisionSet GetTRexCollisionSet();
 
 #endif  // TREX_RUNNER_T_REX_H
