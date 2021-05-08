@@ -13,18 +13,19 @@ Cloud* clouds[MAX_CLOUD_LENGTH] = {NULL};
 Obstacle* obstacles[MAX_OBSTACLE_LENGTH] = {NULL};
 
 int cloud_last_idx = -1;
-int obstacle_last_idx = -1;
-
 int cloud_count = 0;
+int obstacle_last_idx = -1;
 int obstacle_count = 0;
 
 double cloud_speed = 0.2;
 
 void AddCloud();
 void UpdateClouds(uint32_t delta_time, double speed);
-Obstacle* GetNearestObstacle();
 void AddObstacle(double speed);
 void UpdateObstacles(uint32_t delta_time, double speed);
+
+Obstacle* GetNearestObstacle();
+
 bool ShouldAddObstacle(Obstacle* last_obstacle);
 
 void InitHorizon() {

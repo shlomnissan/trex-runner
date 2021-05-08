@@ -27,7 +27,7 @@ void InitHorizonLine() {
     horizon_line.bump_threshold = 5;
     horizon_line.width = 600;
     horizon_line.height = 12;
-    horizon_line.pos_y = 127;
+    horizon_line.pos_y = GROUND_Y_POS;
     horizon_line.sprite_def = sprite_definitions[HORIZON];
     horizon_line.pos_x[0] = 0;
     horizon_line.pos_x[1] = horizon_line.width;

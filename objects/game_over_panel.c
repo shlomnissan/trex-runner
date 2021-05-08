@@ -30,7 +30,7 @@ void DrawGameOverPanel() {
     int text_source_x = game_over_panel.text_pos.x;
     int text_source_y = game_over_panel.text_pos.y;
     int text_target_x = (WINDOW_WIDTH - game_over_panel.text_width) >> 1;
-    int text_target_y = (WINDOW_HEIGHT - 25) / 3;
+    int text_target_y = (WINDOW_HEIGHT - 50) / 2;
     text_source_x += sprite_definitions[TEXT_SPRITE].x;
     text_source_y += sprite_definitions[TEXT_SPRITE].y;
 

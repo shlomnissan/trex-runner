@@ -10,7 +10,7 @@
 
 Range cloud_sky_level_range = {
     .min = CLOUD_SKY_LEVEL_MIN,
-    .max = CLOUD_SKY_LEVEL_MAX
+    .max = WINDOW_HEIGHT * CLOUD_SKY_LEVEL_MAX_FACTOR
 };
 
 Range cloud_gap_range = {
