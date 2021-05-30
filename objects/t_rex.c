@@ -6,6 +6,7 @@
 #include "t_rex.h"
 #include "globals.h"
 #include "spritesheet.h"
+#include "sys/window.h"
 #include "sys/utilities.h"
 #include "sys/input.h"
 #include "sys/sounds.h"
@@ -16,11 +17,12 @@ typedef struct {
     Point pos;
     AnimationFrames anim_frame;
     double jump_velocity;
-    double blink_delay;
+    int blink_delay;
     int width;
     int height;
     int ducking_width;
     int time;
+    int anim_start_time;
     int curr_frame;
     int ground_pos;
     int min_jump_height;
@@ -30,6 +32,8 @@ typedef struct {
 } TRex;
 
 TRex trex;
+
+const int BLINK_TIMING = 7000;
 
 AnimationFrames trex_animation_frames[] = {
     {
@@ -96,7 +100,7 @@ void UpdateJump(uint32_t delta_time);
 bool IsJumpKeyPressed();
 bool IsDuckKeyPressed();
 void SetBlinkDelay();
-void Blink(uint32_t delta_time);
+void Blink(int time);
 void (*OnStartedRunning)();
 
 void InitTRex() {
@@ -105,6 +109,7 @@ void InitTRex() {
     trex.height = 47;
     trex.ducking_width = 59;
     trex.time = 0;
+    trex.anim_start_time = GetTicks();
     trex.curr_frame = 1;
     trex.ground_pos = WINDOW_HEIGHT - trex.height - GROUND_OFFSET;
     trex.min_jump_height = trex.ground_pos - MIN_JUMP_HEIGHT;
@@ -113,7 +118,7 @@ void InitTRex() {
     trex.pos.x = 50;
     trex.pos.y = trex.ground_pos;
     trex.jump_velocity = 0.0;
-    trex.blink_delay = 0.0;
+    trex.blink_delay = 0;
     trex.speed_drop = false;
     trex.reached_min_height = false;
     trex.did_start_running = false;
@@ -127,10 +132,9 @@ void UpdateTRex(uint32_t delta_time, void (*on_started_running)()) {
     }
     HandleControls();
 
+    UpdateAnimationFrames(delta_time);
     if (trex.state == T_REX_WAITING) {
-        Blink(delta_time);
-    } else {
-        UpdateAnimationFrames(delta_time);
+        Blink(GetTicks());
     }
 
     if (trex.state == T_REX_JUMPING) {
@@ -223,11 +227,19 @@ void SetSpeedDrop() {
 }
 
 void SetBlinkDelay() {
-    // TODO: impl.
+    trex.blink_delay = 1000 + (rand() % (BLINK_TIMING - 1000));
 }
 
-void Blink(uint32_t delta_time) {
-    // TODO: impl.
+void Blink(int time) {
+    int delta_time = time - trex.anim_start_time;
+    trex.curr_frame = 1;
+    if (delta_time >= trex.blink_delay) {
+        trex.curr_frame = 0;
+        if (delta_time  - trex.blink_delay >= 100) {
+            SetBlinkDelay();
+            trex.anim_start_time = GetTicks();
+        }
+    }
 }
 
 void ResetTRex() {
