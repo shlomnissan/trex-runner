@@ -1,6 +1,8 @@
 // Copyright 2021 Betamark Pty Ltd. All rights reserved.
 // Author: Shlomi Nissan (shlomi@betamark.com)
 
+#include <stdlib.h>
+
 #include "t_rex.h"
 #include "globals.h"
 #include "spritesheet.h"
@@ -14,6 +16,7 @@ typedef struct {
     Point pos;
     AnimationFrames anim_frame;
     double jump_velocity;
+    double blink_delay;
     int width;
     int height;
     int ducking_width;
@@ -21,6 +24,7 @@ typedef struct {
     int curr_frame;
     int ground_pos;
     int min_jump_height;
+    bool did_start_running;
     bool speed_drop;
     bool reached_min_height;
 } TRex;
@@ -91,14 +95,17 @@ void UpdateJump(uint32_t delta_time);
 
 bool IsJumpKeyPressed();
 bool IsDuckKeyPressed();
+void SetBlinkDelay();
+void Blink(uint32_t delta_time);
+void (*OnStartedRunning)();
 
 void InitTRex() {
-    trex.state = T_REX_RUNNING;
+    trex.state = T_REX_WAITING;
     trex.width = 44;
     trex.height = 47;
     trex.ducking_width = 59;
     trex.time = 0;
-    trex.curr_frame = 0;
+    trex.curr_frame = 1;
     trex.ground_pos = WINDOW_HEIGHT - trex.height - GROUND_OFFSET;
     trex.min_jump_height = trex.ground_pos - MIN_JUMP_HEIGHT;
     trex.sprite_def = sprite_definitions[TREX];
@@ -106,13 +113,25 @@ void InitTRex() {
     trex.pos.x = 50;
     trex.pos.y = trex.ground_pos;
     trex.jump_velocity = 0.0;
+    trex.blink_delay = 0.0;
     trex.speed_drop = false;
     trex.reached_min_height = false;
+    trex.did_start_running = false;
+
+    SetBlinkDelay();
 }
 
-void UpdateTRex(uint32_t delta_time) {
+void UpdateTRex(uint32_t delta_time, void (*on_started_running)()) {
+    if (on_started_running) {
+        OnStartedRunning = on_started_running;
+    }
     HandleControls();
-    UpdateAnimationFrames(delta_time);
+
+    if (trex.state == T_REX_WAITING) {
+        Blink(delta_time);
+    } else {
+        UpdateAnimationFrames(delta_time);
+    }
 
     if (trex.state == T_REX_JUMPING) {
         UpdateJump(delta_time);
@@ -152,6 +171,13 @@ void SetTRexState(TRexState state) {
     trex.state = state;
     trex.anim_frame = trex_animation_frames[trex.state];
     trex.curr_frame = 0;
+
+    if (!trex.did_start_running && trex.state == T_REX_RUNNING) {
+        trex.did_start_running = true;
+        if (OnStartedRunning) {
+            OnStartedRunning();
+        }
+    }
 }
 
 void StartJump() {
@@ -194,6 +220,14 @@ void EndJump() {
 void SetSpeedDrop() {
     trex.speed_drop = true;
     trex.jump_velocity = 1;
+}
+
+void SetBlinkDelay() {
+    // TODO: impl.
+}
+
+void Blink(uint32_t delta_time) {
+    // TODO: impl.
 }
 
 void ResetTRex() {

@@ -9,7 +9,8 @@
 #include "sys/graphics.h"
 
 typedef enum {
-    T_REX_RUNNING = 1,
+    T_REX_WAITING = 0,
+    T_REX_RUNNING,
     T_REX_JUMPING,
     T_REX_DUCKING,
     T_REX_HIT
@@ -17,7 +18,7 @@ typedef enum {
 
 void InitTRex();
 
-void UpdateTRex(uint32_t delta_time);
+void UpdateTRex(uint32_t delta_time, void (*on_started_running)());
 
 void SetTRexState(TRexState state);
 

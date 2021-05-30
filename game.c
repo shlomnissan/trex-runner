@@ -30,7 +30,7 @@ typedef struct {
 } Game;
 
 Game game = {
-    .state = GAME_PLAY,
+    .state = GAME_INTRO,
     .speed = SPEED,
     .distance_ran = 0,
     .game_over_time = 0,
@@ -40,6 +40,7 @@ Game game = {
 
 bool CollisionTest();
 void GameOver();
+void Start();
 void Restart();
 void OnKeyUp(char key);
 
@@ -53,12 +54,15 @@ void InitGame() {
 
 void Update(uint32_t delta_time) {
     bool play_sound = UpdateDistanceMeter(delta_time, game.distance_ran);
+    if (game.state == GAME_INTRO) {
+        UpdateTRex(delta_time, Start);
+    }
     if (game.state == GAME_PLAY) {
         game.running_time += delta_time;
 
         bool has_obstacles = game.running_time > CLEAR_TIME;
         UpdateHorizon(delta_time, game.speed, has_obstacles);
-        UpdateTRex(delta_time);
+        UpdateTRex(delta_time, NULL);
 
         bool collision = CollisionTest();
         if (collision) {
@@ -157,6 +161,10 @@ void GameOver() {
         game.highest_score = (int)game.distance_ran;
         SetDistanceMeterHighScore(game.highest_score);
     }
+}
+
+void Start() {
+    game.state = GAME_PLAY;
 }
 
 void Restart() {
