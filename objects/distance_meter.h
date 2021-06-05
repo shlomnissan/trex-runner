@@ -9,7 +9,7 @@
 
 void InitDistanceMeter();
 
-bool UpdateDistanceMeter(uint32_t delta_time, double distance);
+bool UpdateDistanceMeter(uint32_t delta_time, double distance, bool should_draw);
 
 void SetDistanceMeterHighScore(int score);
 

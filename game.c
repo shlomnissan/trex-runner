@@ -53,7 +53,7 @@ void InitGame() {
 }
 
 void Update(uint32_t delta_time) {
-    bool play_sound = UpdateDistanceMeter(delta_time, game.distance_ran);
+    bool play_sound = UpdateDistanceMeter(delta_time, game.distance_ran, game.state != GAME_INTRO);
     if (game.state == GAME_INTRO) {
         UpdateTRex(delta_time, Start);
     }

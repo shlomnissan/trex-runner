@@ -92,8 +92,8 @@ void DrawDistanceMeterDigit(int digit_pos, int value, bool opt_high_score) {
     }
 }
 
-bool UpdateDistanceMeter(uint32_t delta_time, double distance) {
-    bool paint = true;
+bool UpdateDistanceMeter(uint32_t delta_time, double distance, bool should_draw) {
+    bool paint = should_draw;
     bool play_sound = false;
 
     if (!achievement) {
