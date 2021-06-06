@@ -4,7 +4,7 @@
 #ifndef TREX_RUNNER_GLOBALS_H
 #define TREX_RUNNER_GLOBALS_H
 
-#define WINDOW_TITLE "T-Rex Runner"
+#define WINDOW_TITLE "T-Rex Runner!"
 #define WINDOW_WIDTH 600
 #define WINDOW_HEIGHT 150
 
