@@ -41,7 +41,7 @@ void FreeResources() {
     DeinitWindow();
 }
 
-int main() {
+int main(int argc, char *argv[]) {
     if (!Initialize() || !LoadAssets()) return -1;
 
     StartGame();
