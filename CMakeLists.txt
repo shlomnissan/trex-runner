@@ -7,9 +7,9 @@ include_directories(${PROJECT_SOURCE_DIR})
 
 set(SDL2MIXER_OPUS false)
 
-add_subdirectory(lib/SDL)
-add_subdirectory(lib/SDL_image)
-add_subdirectory(lib/SDL_mixer)
+#add_subdirectory(lib/SDL)
+#add_subdirectory(lib/SDL_image)
+#add_subdirectory(lib/SDL_mixer)
 
 set(INCLUDE
     sys/window.h
