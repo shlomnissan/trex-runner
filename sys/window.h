@@ -6,7 +6,7 @@
 
 #include <stdbool.h>
 
-#include <SDL2/SDL.h>
+#include <SDL.h>
 
 bool InitializeWindow(char* title, uint32_t width, uint32_t height);
 

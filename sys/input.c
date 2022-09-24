@@ -1,7 +1,7 @@
 // Copyright 2021 Betamark Pty Ltd. All rights reserved.
 // Author: Shlomi Nissan (shlomi@betamark.com)
 
-#include <SDL2/SDL.h>
+#include <SDL.h>
 
 #include "input.h"
 
