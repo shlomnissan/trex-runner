@@ -1,9 +1,0 @@
-[submodule "dependencies/SDL"]
-	path = dependencies/SDL
-	url = https://github.com/libsdl-org/SDL
-[submodule "dependencies/SDL_image"]
-	path = dependencies/SDL_image
-	url = https://github.com/libsdl-org/SDL_image
-[submodule "dependencies/SDL_mixer"]
-	path = dependencies/SDL_mixer
-	url = https://github.com/libsdl-org/SDL_mixer

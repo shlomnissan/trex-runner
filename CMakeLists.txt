@@ -1,15 +1,53 @@
-cmake_minimum_required(VERSION 3.17)
+cmake_minimum_required(VERSION 3.19)
 project(trex_runner C)
 
 set(CMAKE_C_STANDARD 99)
 
 include_directories(${PROJECT_SOURCE_DIR})
 
-set(SDL2MIXER_OPUS false)
+if (NOT SDL_FOUND OR NOT SDLIMAGE_FOUND OR NOT SDLMIXER_FOUND)
+    include(FetchContent)
 
-add_subdirectory(dependencies/SDL)
-add_subdirectory(dependencies/SDL_image)
-add_subdirectory(dependencies/SDL_mixer)
+    if (NOT SDL_FOUND)
+        FetchContent_Declare(
+            sdl
+            GIT_REPOSITORY https://github.com/libsdl-org/SDL
+            GIT_TAG 8d2cb15
+            GIT_PROGRESS TRUE
+        )
+        if(NOT sdl_POPULATED)
+            FetchContent_Populate(sdl)
+            add_subdirectory(${sdl_SOURCE_DIR} ${sdl_BINARY_DIR})
+        endif()
+    endif()
+
+    if (NOT SDLIMAGE_FOUND)
+        FetchContent_Declare(
+            sdlimage
+            GIT_REPOSITORY https://github.com/libsdl-org/SDL_image
+            GIT_TAG 71229fe
+            GIT_PROGRESS TRUE
+        )
+        if(NOT sdlimage_POPULATED)
+            FetchContent_Populate(sdlimage)
+            add_subdirectory(${sdlimage_SOURCE_DIR} ${sdlimage_BINARY_DIR})
+        endif()
+    endif()
+
+    if (NOT SDLMIXER_FOUND)
+        FetchContent_Declare(
+            sdlmixer
+            GIT_REPOSITORY https://github.com/libsdl-org/SDL_mixer
+            GIT_TAG 267a198f 
+            GIT_PROGRESS TRUE
+        )
+
+        if(NOT sdlmixer_POPULATED)
+            FetchContent_Populate(sdlmixer)
+            add_subdirectory(${sdlmixer_SOURCE_DIR} ${sdlmixer_BINARY_DIR})
+        endif()
+    endif()
+endif()
 
 set(INCLUDE
     sys/window.h
@@ -46,10 +84,10 @@ set(SOURCE
     game.c
 )
 
-add_executable(${PROJECT_NAME} main.c ${INCLUDE} ${SOURCE})
+add_executable(trex main.c ${INCLUDE} ${SOURCE})
 
 target_link_libraries(
-    ${PROJECT_NAME}
+    trex 
     SDL2
     SDL2_image
     SDL2_mixer
