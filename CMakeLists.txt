@@ -1,5 +1,9 @@
 cmake_minimum_required(VERSION 3.19)
-project(trex_runner C)
+project(
+    TRexRunner
+    VERSION 0.1
+    LANGUAGES C
+)
 
 set(CMAKE_C_STANDARD 99)
 
@@ -86,10 +90,4 @@ set(SOURCE
 
 add_executable(trex main.c ${INCLUDE} ${SOURCE})
 
-target_link_libraries(
-    trex 
-    SDL2
-    SDL2_image
-    SDL2_mixer
-    m
-)
+target_link_libraries(trex PRIVATE SDL2 SDL2_image SDL2_mixer m)
