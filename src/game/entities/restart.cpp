@@ -6,7 +6,7 @@
 #include "core/types.h"
 #include "game/shared.h"
 
-Restart::Restart(Events* events) : Entity(events) {
+Restart::Restart() {
     sprites_.emplace_back(std::make_unique<Sprite>(
         "spritesheet",
         "restart_button",

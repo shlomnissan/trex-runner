@@ -35,10 +35,6 @@ Window::Window(std::string_view title, int width, int height) {
     }
 }
 
-auto Window::SetEvents(Events *events) -> void {
-    events_ = events;
-}
-
 auto Window::ClearScreen() -> void {
     SDL_SetRenderDrawColor(renderer_, 0xf7, 0xf7, 0xf7, 255);
     SDL_RenderClear(renderer_);
@@ -117,13 +113,13 @@ auto Window::PollEvents() -> void {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
         if (event.type == SDL_QUIT) {
-            events_->Publish("on_quit");
+            Events::GetInstance()->Publish("on_quit");
         }
         if (event.type == SDL_KEYDOWN) {
-            events_->Publish("on_key_down", event.key.keysym.sym);
+            Events::GetInstance()->Publish("on_key_down", event.key.keysym.sym);
         }
         if (event.type == SDL_KEYUP) {
-            events_->Publish("on_key_up", event.key.keysym.sym);
+            Events::GetInstance()->Publish("on_key_up", event.key.keysym.sym);
         }
     }
 }

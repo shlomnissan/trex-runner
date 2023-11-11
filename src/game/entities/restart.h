@@ -7,5 +7,5 @@
 
 class Restart: public Entity {
 public:
-    Restart(Events* events);
+    Restart();
 };

@@ -20,7 +20,7 @@ enum class TRexState {
 
 class TRex : public Entity {
 public:
-    explicit TRex(Events* events);
+    TRex();
 
     auto Crash() -> void;
     auto Reset() -> void;

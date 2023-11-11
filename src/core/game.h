@@ -9,7 +9,6 @@
 #include <unordered_map>
 
 #include "core/audio.h"
-#include "core/events.h"
 #include "core/keyboard.h"
 #include "core/spritesheet.h"
 #include "core/stage.h"
@@ -24,7 +23,6 @@ public:
     auto LoadAudio(std::string_view path, std::string_view id) -> void;
     auto LoadSpritesheet(const std::string& id, const SpritesheetFiles& files) const -> void;
     auto Start(std::unique_ptr<Stage> scene) -> void;
-    auto GetEvents() -> Events*;
 
 private:
     bool running_ {true};
@@ -34,7 +32,6 @@ private:
     std::unique_ptr<Stage> curr_stage_ {nullptr};
 
     Window window_;
-    Events events_;
     Keyboard keyboard_;
     Audio audio_;
 

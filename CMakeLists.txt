@@ -13,10 +13,11 @@ find_package(SDL2 REQUIRED)
 
 set(CORE_SOURCES
     libs/stb_image.h
-    src/core/audio.h
     src/core/audio.cpp
+    src/core/audio.h
     src/core/entity.cpp
     src/core/entity.h
+    src/core/events.cpp
     src/core/events.h
     src/core/game.cpp
     src/core/game.h

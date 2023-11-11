@@ -1,8 +1,9 @@
 // Copyright 2023 Betamark Pty Ltd. All rights reserved.
 // Author: Shlomi Nissan (shlomi@betamark.com)
 
-#include "core/game.h"
+#include <memory>
 
+#include "core/game.h"
 #include "game/main_stage.h"
 #include "game/shared.h"
 
@@ -19,7 +20,7 @@ int main() {
     );
 
     // start game
-    game.Start(std::make_unique<MainStage>(game.GetEvents()));
+    game.Start(std::make_unique<MainStage>());
 
     return 0;
 }

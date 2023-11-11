@@ -10,8 +10,6 @@
 
 class Obstacles : public Entity {
 public:
-    using Entity::Entity;
-    
     auto UpdateWithSpeed(const double dt, const double speed) -> void;
     auto Reset() -> void;
 

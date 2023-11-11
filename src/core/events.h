@@ -5,6 +5,7 @@
 
 #include <cstdint>
 #include <functional>
+#include <mutex>
 #include <stdexcept>
 #include <string>
 #include <string_view>
@@ -33,6 +34,16 @@ struct EventError : public std::runtime_error {
 
 class Events {
 public:
+    static Events* GetInstance();
+
+    // delete copy constructor/assignment
+    Events(const Events& e) = delete;
+    auto operator=(const Events& e) = delete;
+
+    // delete move constructor/assignment
+    Events(Events&& other) = delete;
+    auto operator=(Events&& e) = delete;
+
     template <typename EventType>
     auto AddEventListener(std::string label, EventType listener) {
         if (callbacks.contains(label)) {
@@ -63,5 +74,11 @@ public:
     }
 
 private:
+    static Events* instance_;
+    static std::mutex mutex_;
+
     std::unordered_map<std::string, Callbacks> callbacks;
+
+    // singleton private constructor
+    Events() = default;
 };

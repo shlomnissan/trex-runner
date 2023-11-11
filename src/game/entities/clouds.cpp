@@ -9,7 +9,7 @@
 const auto kCloudWidth = 46;
 const auto kCloudSpeed = 0.2;
 
-Clouds::Clouds(Events* events) : Entity(events) {
+Clouds::Clouds() {
     AddCloud();
 }
 

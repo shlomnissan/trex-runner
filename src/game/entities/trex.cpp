@@ -3,6 +3,7 @@
 
 #include "trex.h"
 
+#include "core/events.h"
 #include "core/keyboard.h"
 #include "core/sprite_animated.h"
 #include "game/shared.h"
@@ -14,7 +15,7 @@ const double kGravity = 0.6;
 const double kMinJumpPosition = kYpos - 35;
 const double kDropCoefficient = 3.0;
 
-TRex::TRex(Events* events) : Entity(events) {
+TRex::TRex() {
     auto sprite = std::make_unique<SpriteAnimated>(
         "spritesheet",
         Vector2 {
@@ -117,7 +118,7 @@ auto TRex::HandleKeys(const Keyboard& keyboard) -> void {
 
     // start jumping
     if ((state_ == Running || state_ == Idle) && IsJumpKeyDown(keyboard)) {
-        events_->Publish("on_play_sound", "jump");
+        Events::GetInstance()->Publish("on_play_sound", "jump");
         state_ = Jumping;
         vertical_velocity_ = kInitialJumpVelocity;
     }

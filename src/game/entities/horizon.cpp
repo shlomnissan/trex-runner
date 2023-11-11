@@ -8,7 +8,7 @@
 constexpr int kBumpThreshold = 5;
 constexpr int kGroundWidth = 600;
 
-Horizon::Horizon(Events* events) : Entity(events) {
+Horizon::Horizon() {
     const auto y_pos = kWindowHeight - 23;
 
     sprites_.emplace_back(std::make_unique<Sprite>(

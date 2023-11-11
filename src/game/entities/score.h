@@ -14,8 +14,6 @@ struct Achievement {
 
 class Score : public Entity {
 public:
-    using Entity::Entity;
-
     auto UpdateWithSpeed(const double dt, const double speed) -> void;
     auto UpdateHighScore() -> void;
     auto ResetScore() -> void;

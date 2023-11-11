@@ -3,10 +3,9 @@
 
 #pragma once
 
-#include "events.h"
-
 #include <array>
 #include <cstdint>
+#include <functional>
 #include <unordered_map>
 #include <vector>
 
@@ -20,7 +19,7 @@ using CallbackVector = std::vector<std::function<void()>>;
 
 class Keyboard {
 public:
-    explicit Keyboard(Events& events);
+    explicit Keyboard();
 
     auto AddOnKeyUpCallback(Key key, std::function<void()> func) -> void;
     auto IsKeyPressed(Key key) const -> bool;

@@ -5,6 +5,7 @@
 
 #include <fmt/format.h>
 
+#include "core/events.h"
 #include "game/shared.h"
 
 auto Score::UpdateWithSpeed(const double dt, const double speed) -> void {
@@ -17,7 +18,7 @@ auto Score::UpdateWithSpeed(const double dt, const double speed) -> void {
         score = achievement_.last_achievement;
         ScoreFlashing(dt);        
     } else if (score > 0 && score % kAchievementDistance == 0) {
-        events_->Publish("on_play_sound", "achievement");
+        Events::GetInstance()->Publish("on_play_sound", "achievement");
         achievement_.has_achievement = true;
         achievement_.flash_iterations = kFlashIterations;
         achievement_.last_achievement = score;

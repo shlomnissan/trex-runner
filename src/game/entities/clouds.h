@@ -11,7 +11,7 @@
 
 class Clouds : public Entity {
 public:
-    Clouds(Events* events);
+    Clouds();
 
     auto UpdateWithSpeed(const double dt, const double speed) -> void;
 

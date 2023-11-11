@@ -8,14 +8,11 @@
 #include <vector>
 
 #include "core/entity.h"
-#include "core/events.h"
 #include "core/keyboard.h"
 #include "core/types.h"
 
 class Stage {
 public:
-    explicit Stage(Events* events) : events_(events) {}
-
     virtual auto Init() -> void = 0;
     virtual auto Update(const double dt, Keyboard& keyboard) -> void = 0; 
 
@@ -35,7 +32,6 @@ public:
 
 protected:
     std::unique_ptr<Frame> clip_frame_;
-    Events* events_ {nullptr};
 
 private:
     std::vector<Entity*> entities_;

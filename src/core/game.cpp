@@ -3,21 +3,20 @@
 
 #include "game.h"
 
+#include "core/events.h"
 #include "core/resource_manager.h"
 #include "core/timer.h"
 
 Game::Game(std::string_view title, int width, int height)
  : width_(width),
    height_(height),
-   window_(title, width_, height_),
-   keyboard_(events_)
+   window_(title, width_, height_)
 {
-    window_.SetEvents(&events_);
-    events_.AddEventListener<OnQuit>("on_quit", [this](){
+    Events::GetInstance()->AddEventListener<OnQuit>("on_quit", [this](){
         running_ = false;
     });
 
-    events_.AddEventListener<OnPlaySound>(
+    Events::GetInstance()->AddEventListener<OnPlaySound>(
         "on_play_sound", [this](std::string_view sound){
             audio_.PlayAudio(sound);
         }
@@ -30,10 +29,6 @@ auto Game::LoadAudio(std::string_view path, std::string_view id) -> void {
 
 auto Game::LoadSpritesheet(const std::string& id, const SpritesheetFiles& files) const -> void {
     ResourceManager::LoadSpritesheet(id, files);
-}
-
-auto Game::GetEvents() -> Events* {
-    return &events_;
 }
 
 auto Game::Start(std::unique_ptr<Stage> scene) -> void {

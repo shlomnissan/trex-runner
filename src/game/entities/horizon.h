@@ -8,7 +8,7 @@
 
 class Horizon : public Entity {
 public:
-    Horizon(Events* events);
+    Horizon();
 
     auto UpdateWithSpeed(const double dt, const double speed) -> void;
 

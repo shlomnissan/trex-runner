@@ -3,6 +3,7 @@
 
 #include "main_stage.h"
 
+#include "core/events.h"
 #include "game/shared.h"
 
 auto MainStage::Init() -> void {
@@ -56,7 +57,7 @@ auto MainStage::UpdateRunning(const double dt, const Keyboard& keyboard) -> void
     if (running_time_ > kClearTime) {
         obstacles_.UpdateWithSpeed(dt, speed_);
         if (trex_.HasCollision(obstacles_)) {
-            events_->Publish("on_play_sound", "hit");
+            Events::GetInstance()->Publish("on_play_sound", "hit");
             trex_.Crash();
             trex_.Update(dt, keyboard);
             score_.UpdateHighScore();

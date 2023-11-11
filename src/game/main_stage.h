@@ -36,12 +36,12 @@ private:
     double speed_ {kDefaultSpeed};
 
     RunnerState state_ {RunnerState::Intro};
-    Clouds clouds_ {events_};
-    Restart restart_ {events_};
-    Horizon horizon_ {events_};
-    Obstacles obstacles_ {events_};
-    TRex trex_ {events_};
-    Score score_ {events_};
+    Clouds clouds_;
+    Restart restart_;
+    Horizon horizon_;
+    Obstacles obstacles_;
+    TRex trex_;
+    Score score_;
 
     auto UpdateIntro(const double dt, const Keyboard& keyboard) -> void;
     auto UpdateRunning(const double dt, const Keyboard& keyboard) -> void;

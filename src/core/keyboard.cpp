@@ -3,7 +3,9 @@
 
 #include "keyboard.h"
 
-Keyboard::Keyboard(Events& events) {
+#include "core/events.h"
+
+Keyboard::Keyboard() {
     const auto on_key_up = [this](uint8_t key) {
         keymap_[key] = false;
         if (key_up_callbacks_.contains(key)) {
@@ -15,8 +17,8 @@ Keyboard::Keyboard(Events& events) {
         keymap_[key] = true;
     };
 
-    events.AddEventListener<OnKeyDown>("on_key_down", on_key_down);
-    events.AddEventListener<OnKeyUp>("on_key_up", on_key_up);
+    Events::GetInstance()->AddEventListener<OnKeyDown>("on_key_down", on_key_down);
+    Events::GetInstance()->AddEventListener<OnKeyUp>("on_key_up", on_key_up);
 }
 
 auto Keyboard::IsKeyPressed(Key key) const -> bool {
