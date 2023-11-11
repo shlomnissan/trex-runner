@@ -29,7 +29,7 @@ Make sure you have Conan 2 and CMake installed on your system.
 <b>$</b> cmake --build .
 </pre>
 
-If you encounter any issues with Conan, take a look at the [Build a Simple CMake Project using Conan](https://docs.conan.io/2/tutorial/consuming_packages/build_simple_cmake_project.html) tutorial, which will guide you through this process step-by-step.
+Following these commands should result in an executable called `trex-runner` in the build directory. If you encounter any issues with Conan, take a look at the [Build a Simple CMake Project using Conan](https://docs.conan.io/2/tutorial/consuming_packages/build_simple_cmake_project.html) tutorial, which will guide you through this process step-by-step.
 
 ## Licence
 
