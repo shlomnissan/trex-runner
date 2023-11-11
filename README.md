@@ -1,6 +1,8 @@
 # 🦖 Chrome’s Dinosaur Game in Modern C++
 
-![trex](https://user-images.githubusercontent.com/3165988/120908452-565aa900-c61f-11eb-849c-7f56629657c0.gif)
+<p align="center">
+   <img src="https://user-images.githubusercontent.com/3165988/120908452-565aa900-c61f-11eb-849c-7f56629657c0.gif" />
+</p>
 
 This repository contains a port of Chrome's Dinosaur Game written in modern C++. It uses modern CMake for build generation and Conan 2 as its package manager.
 
