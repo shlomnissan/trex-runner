@@ -1,93 +1,71 @@
-cmake_minimum_required(VERSION 3.19)
-project(
-    TRexRunner
-    VERSION 0.1
-    LANGUAGES C
+cmake_minimum_required(VERSION 3.22)
+
+project(trex_runner)
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_C_STANDARD_REQUIRED ON)
+set(CMAKE_C_EXTENSIONS OFF)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+find_package(fmt REQUIRED)
+find_package(RapidJSON REQUIRED)
+find_package(SDL2 REQUIRED)
+
+set(CORE_SOURCES
+    libs/stb_image.h
+    src/core/audio.h
+    src/core/audio.cpp
+    src/core/entity.cpp
+    src/core/entity.h
+    src/core/events.h
+    src/core/game.cpp
+    src/core/game.h
+    src/core/image.cpp
+    src/core/image.h
+    src/core/keyboard.cpp
+    src/core/keyboard.h
+    src/core/random.h
+    src/core/resource_manager.cpp
+    src/core/resource_manager.h
+    src/core/sprite.h
+    src/core/sprite_animated.cpp
+    src/core/sprite_animated.h
+    src/core/spritesheet.cpp
+    src/core/spritesheet.h
+    src/core/stage.h
+    src/core/timer.h
+    src/core/types.h
+    src/core/window.cpp
+    src/core/window.h
 )
 
-set(CMAKE_C_STANDARD 99)
-
-include_directories(${PROJECT_SOURCE_DIR})
-
-if (NOT SDL_FOUND OR NOT SDLIMAGE_FOUND OR NOT SDLMIXER_FOUND)
-    include(FetchContent)
-
-    if (NOT SDL_FOUND)
-        FetchContent_Declare(
-            sdl
-            GIT_REPOSITORY https://github.com/libsdl-org/SDL
-            GIT_TAG 8d2cb15
-            GIT_PROGRESS TRUE
-        )
-        if(NOT sdl_POPULATED)
-            FetchContent_Populate(sdl)
-            add_subdirectory(${sdl_SOURCE_DIR} ${sdl_BINARY_DIR})
-        endif()
-    endif()
-
-    if (NOT SDLIMAGE_FOUND)
-        FetchContent_Declare(
-            sdlimage
-            GIT_REPOSITORY https://github.com/libsdl-org/SDL_image
-            GIT_TAG 71229fe
-            GIT_PROGRESS TRUE
-        )
-        if(NOT sdlimage_POPULATED)
-            FetchContent_Populate(sdlimage)
-            add_subdirectory(${sdlimage_SOURCE_DIR} ${sdlimage_BINARY_DIR})
-        endif()
-    endif()
-
-    if (NOT SDLMIXER_FOUND)
-        FetchContent_Declare(
-            sdlmixer
-            GIT_REPOSITORY https://github.com/libsdl-org/SDL_mixer
-            GIT_TAG 267a198f 
-            GIT_PROGRESS TRUE
-        )
-
-        if(NOT sdlmixer_POPULATED)
-            FetchContent_Populate(sdlmixer)
-            add_subdirectory(${sdlmixer_SOURCE_DIR} ${sdlmixer_BINARY_DIR})
-        endif()
-    endif()
-endif()
-
-set(INCLUDE
-    sys/window.h
-    sys/input.h
-    sys/graphics.h
-    sys/sounds.h
-    sys/utilities.h
-    objects/t_rex.h
-    objects/horizon.h
-    objects/horizon_line.h
-    objects/obstacle.h
-    objects/clouds.h
-    objects/game_over_panel.h
-    objects/distance_meter.h
-    globals.h
-    spritesheet.h
-    game.h
+set(GAME_SOURCES
+    src/game/entities/clouds.cpp
+    src/game/entities/clouds.h
+    src/game/entities/horizon.cpp
+    src/game/entities/horizon.h
+    src/game/entities/obstacles.cpp
+    src/game/entities/obstacles.h
+    src/game/entities/restart.cpp
+    src/game/entities/restart.h
+    src/game/entities/score.cpp
+    src/game/entities/score.h
+    src/game/entities/trex.cpp
+    src/game/entities/trex.h
+    src/game/main_stage.cpp
+    src/game/main_stage.h
+    src/game/shared.h
+    src/main.cpp
 )
 
-set(SOURCE
-    sys/window.c
-    sys/input.c
-    sys/graphics.c
-    sys/sounds.c
-    sys/utilities.c
-    objects/t_rex.c
-    objects/horizon.c
-    objects/horizon_line.c
-    objects/obstacle.c
-    objects/clouds.c
-    objects/game_over_panel.c
-    objects/distance_meter.c
-    spritesheet.c
-    game.c
+FILE(GLOB ASSETS ${CMAKE_SOURCE_DIR}/assets/*)
+FILE(COPY ${ASSETS} DESTINATION ${CMAKE_BINARY_DIR})
+
+add_executable(trex_runner ${CORE_SOURCES} ${GAME_SOURCES})
+
+target_include_directories(trex_runner PRIVATE
+    ${CMAKE_SOURCE_DIR}/src
+    ${CMAKE_SOURCE_DIR}/libs
 )
 
-add_executable(trex main.c ${INCLUDE} ${SOURCE})
-
-target_link_libraries(trex PRIVATE SDL2 SDL2_image SDL2_mixer m)
+target_link_libraries(trex_runner PRIVATE fmt::fmt rapidjson SDL2::SDL2)

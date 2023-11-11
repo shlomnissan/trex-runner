@@ -1,0 +1,8 @@
+[requires]
+fmt/8.1.1
+rapidjson/1.1.0
+sdl/2.26.5
+
+[generators]
+CMakeDeps
+CMakeToolchain
