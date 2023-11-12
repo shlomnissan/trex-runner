@@ -25,7 +25,7 @@ Make sure you have Conan 2 and CMake installed on your system.
 <b>$</b> cd trex-runner
 <b>$</b> conan install . --output-folder=build -b=missing -s=build_type=Debug
 <b>$</b> cd build
-<b>$</b> cmake .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Debug
+<b>$</b> cmake .. -DCMAKE_TOOLCHAIN_FILE="conan_toolchain.cmake" -DCMAKE_BUILD_TYPE=Debug
 <b>$</b> cmake --build .
 </pre>
 
