@@ -45,5 +45,6 @@ private:
 
     auto UpdateIntro(const double dt, const Keyboard& keyboard) -> void;
     auto UpdateRunning(const double dt, const Keyboard& keyboard) -> void;
-    auto UpdateGameOver(Keyboard& keyboard) -> void;
+    auto RegisterKeys() -> void;
+    auto ResetGame() -> void;
 };

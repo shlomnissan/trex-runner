@@ -23,13 +23,27 @@ auto MainStage::Init() -> void {
     trex_.SetStartCallback([&state = state_]() {
         state = RunnerState::Running;
     });
+
+    RegisterKeys();
+}
+
+auto MainStage::RegisterKeys() -> void {
+    using enum RunnerState;
+
+    constexpr static auto key_space = 32;
+    constexpr static auto key_up = 82;
+    Events::GetInstance()->AddEventListener<OnKeyUp>
+        ("on_key_up", [this](uint8_t key){
+        if ((key == key_space || key == key_up) && state_ == GameOver) {
+            ResetGame();
+        }
+    });
 }
 
 auto MainStage::Update(const double dt, Keyboard& keyboard) -> void {
     using enum RunnerState;
     if (state_ == Intro) UpdateIntro(dt, keyboard);
     if (state_ == Running) UpdateRunning(dt, keyboard);
-    if (state_ == GameOver) UpdateGameOver(keyboard);
 }
 
 auto MainStage::UpdateIntro(const double dt, const Keyboard& keyboard) -> void {
@@ -45,9 +59,9 @@ auto MainStage::UpdateRunning(const double dt, const Keyboard& keyboard) -> void
     trex_.Update(dt, keyboard);
 
     if (clip_frame_->width < kWindowWidth) {
-        // intro, expand view
+        // intro transition, expand view
         auto rate = static_cast<double>(kWindowWidth) / kIntroDuration * dt * 2;
-        clip_frame_->width += rate;
+        clip_frame_->width += static_cast<int>(rate);
     } else {
         horizon_.UpdateWithSpeed(dt, speed_);
         clouds_.UpdateWithSpeed(dt, speed_);
@@ -67,19 +81,12 @@ auto MainStage::UpdateRunning(const double dt, const Keyboard& keyboard) -> void
     }
 }
 
-auto MainStage::UpdateGameOver(Keyboard& keyboard) -> void {
-    const auto on_key_up = [&]() {
-        if (state_ == RunnerState::GameOver) {
-            RemoveEntity(&restart_);
-            trex_.Reset();
-            obstacles_.Reset();
-            score_.ResetScore();
-            speed_ = kDefaultSpeed;
-            running_time_ = 0.0;
-            state_ = RunnerState::Running;
-        }
-    };
-    
-    keyboard.AddOnKeyUpCallback(Key::Up, on_key_up);
-    keyboard.AddOnKeyUpCallback(Key::Space, on_key_up);
+auto MainStage::ResetGame() -> void {
+    RemoveEntity(&restart_);
+    trex_.Reset();
+    obstacles_.Reset();
+    score_.ResetScore();
+    speed_ = kDefaultSpeed;
+    running_time_ = 0.0;
+    state_ = RunnerState::Running;
 }

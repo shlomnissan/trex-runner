@@ -4,7 +4,6 @@
 #include "trex.h"
 
 #include "core/events.h"
-#include "core/keyboard.h"
 #include "core/sprite_animated.h"
 #include "game/shared.h"
 
@@ -25,36 +24,19 @@ TRex::TRex() {
         /* fps = */ 12
     );
 
-    sprite->AddAnimation("idle", {
-        "trex_idle_0"
-    });
-
-    sprite->AddAnimation("blink", {
-        "trex_blink_0"
-    });
-
-    sprite->AddAnimation("jumping", {
-        "trex_idle_0"
-    });
-
-    sprite->AddAnimation("ducking", {
-        "trex_ducking_0",
-        "trex_ducking_1"
-    });
-
-    sprite->AddAnimation("running", {
-        "trex_running_0",
-        "trex_running_1"
-    });
-
-    sprite->AddAnimation("crashed", {
-        "trex_crashed"
-    });
-
+    // add animations
+    sprite->AddAnimation("idle", {"trex_idle_0"});
+    sprite->AddAnimation("blink", {"trex_blink_0"});
+    sprite->AddAnimation("jumping", {"trex_idle_0"});
+    sprite->AddAnimation("ducking", {"trex_ducking_0", "trex_ducking_1"});
+    sprite->AddAnimation("running", {"trex_running_0", "trex_running_1"});
+    sprite->AddAnimation("crashed", {"trex_crashed"});
     sprite->SetAnimation("idle");
 
     sprites_.emplace_back(std::move(sprite));
     blink_time_ = blink_rand_();
+
+    RegisterKeys();
 }
 
 auto TRex::Update(const double dt, const Keyboard &keyboard) -> void {
@@ -77,7 +59,7 @@ auto TRex::Update(const double dt, const Keyboard &keyboard) -> void {
     }
 
     UpdateAnimation(sprite);
-    HandleKeys(keyboard);
+    HandleControls();
 }
 
 auto TRex::Blink(const double dt, SpriteAnimated* sprite) -> void {
@@ -100,48 +82,65 @@ auto TRex::SetStartCallback(std::function<void()> f) -> void {
     start_callback_ = std::move(f);
 }
 
-auto TRex::HandleKeys(const Keyboard& keyboard) -> void {
+auto TRex::RegisterKeys() -> void {
+    constexpr uint8_t key_space = 32;
+    constexpr uint8_t key_down = 81;
+    constexpr uint8_t key_up = 82;
+
+    Events::GetInstance()->AddEventListener<OnKeyDown>
+      ("on_key_down", [this](uint8_t key){
+        if (key == key_down) {
+            duck_key_down_ = true;
+        }
+        if (key == key_up || key == key_space) {
+            jump_key_down_ = true;
+        }
+    });
+
+    Events::GetInstance()->AddEventListener<OnKeyUp>
+      ("on_key_up", [this](uint8_t key){
+        if (key == key_down) {
+            duck_key_down_ = false;
+        }
+        if (key == key_up || key == key_space) {
+            jump_key_down_ = false;
+        }
+    });
+}
+
+auto TRex::HandleControls() -> void {
     using enum TRexState;
     if (state_ == Crashed) {
         return;
     }
 
     // start ducking
-    if (state_ == Running && IsDuckKeyDown(keyboard)) {
+    if (state_ == Running && duck_key_down_) {
         state_ = Ducking;
     }
 
     // end ducking
-    if (state_ == Ducking && !IsDuckKeyDown(keyboard)) {
+    if (state_ == Ducking && !duck_key_down_) {
         state_ = Running;
     }
 
     // start jumping
-    if ((state_ == Running || state_ == Idle) && IsJumpKeyDown(keyboard)) {
+    if ((state_ == Running || state_ == Idle) && jump_key_down_) {
         Events::GetInstance()->Publish("on_play_sound", "jump");
         state_ = Jumping;
         vertical_velocity_ = kInitialJumpVelocity;
     }
 
     // shorten jump
-    if (state_ == Jumping && !IsJumpKeyDown(keyboard)) {
+    if (state_ == Jumping && !jump_key_down_) {
         ShortenJump();
     }
 
     // cancel jump
-    if (state_ == Jumping && IsDuckKeyDown(keyboard) && !cancel_jump_) {
+    if (state_ == Jumping && duck_key_down_ && !cancel_jump_) {
         cancel_jump_ = true;
         vertical_velocity_ = 1;
     }
-}
-
-auto TRex::IsJumpKeyDown(const Keyboard& keyboard) const -> bool {
-    return keyboard.IsKeyPressed(Key::Space) ||
-           keyboard.IsKeyPressed(Key::Up);
-}
-
-auto TRex::IsDuckKeyDown(const Keyboard& keyboard) const -> bool {
-    return keyboard.IsKeyPressed(Key::Down);
 }
 
 auto TRex::UpdateJump(const double dt, SpriteAnimated* sprite) -> void {

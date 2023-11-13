@@ -28,6 +28,9 @@ public:
     auto SetStartCallback(std::function<void()> callback) -> void;
 
 private:
+    bool duck_key_down_ {false};
+    bool jump_key_down_ {false};
+
     bool reached_min_height_ {false};
     bool cancel_jump_ {false};
     bool did_start_game_ {false};
@@ -41,9 +44,8 @@ private:
     Random blink_rand_{1000, 7000};
 
     auto Blink(const double dt, SpriteAnimated* sprite) -> void;
-    auto HandleKeys(const Keyboard& keyboard) -> void;
-    auto IsDuckKeyDown(const Keyboard& keyboard) const -> bool;
-    auto IsJumpKeyDown(const Keyboard& keyboard) const -> bool;
+    auto RegisterKeys() -> void;
+    auto HandleControls() -> void;
     auto ShortenJump() -> void;
     auto UpdateAnimation(SpriteAnimated* sprite) -> void;
     auto UpdateJump(const double dt, SpriteAnimated* sprite) -> void;
