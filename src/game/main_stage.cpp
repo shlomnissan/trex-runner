@@ -40,23 +40,23 @@ auto MainStage::RegisterKeys() -> void {
     });
 }
 
-auto MainStage::Update(const double dt, Keyboard& keyboard) -> void {
+auto MainStage::Update(const double dt) -> void {
     using enum RunnerState;
-    if (state_ == Intro) UpdateIntro(dt, keyboard);
-    if (state_ == Running) UpdateRunning(dt, keyboard);
+    if (state_ == Intro) UpdateIntro(dt);
+    if (state_ == Running) UpdateRunning(dt);
 }
 
-auto MainStage::UpdateIntro(const double dt, const Keyboard& keyboard) -> void {
-    trex_.Update(dt, keyboard);
+auto MainStage::UpdateIntro(const double dt) -> void {
+    trex_.Update(dt);
 }
 
-auto MainStage::UpdateRunning(const double dt, const Keyboard& keyboard) -> void {
+auto MainStage::UpdateRunning(const double dt) -> void {
     if (speed_ < kMaxSpeed) {
         speed_ += 0.001;
     }
 
     running_time_ += dt;
-    trex_.Update(dt, keyboard);
+    trex_.Update(dt);
 
     if (clip_frame_->width < kWindowWidth) {
         // intro transition, expand view
@@ -73,7 +73,7 @@ auto MainStage::UpdateRunning(const double dt, const Keyboard& keyboard) -> void
         if (trex_.HasCollision(obstacles_)) {
             Events::GetInstance()->Publish("on_play_sound", "hit");
             trex_.Crash();
-            trex_.Update(dt, keyboard);
+            trex_.Update(dt);
             score_.UpdateHighScore();
             AddEntity(&restart_);
             state_ = RunnerState::GameOver;

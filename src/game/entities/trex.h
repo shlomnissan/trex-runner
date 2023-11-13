@@ -6,7 +6,6 @@
 #include <functional>
 
 #include "core/entity.h"
-#include "core/keyboard.h"
 #include "core/random.h"
 #include "core/sprite_animated.h"
 
@@ -24,7 +23,7 @@ public:
 
     auto Crash() -> void;
     auto Reset() -> void;
-    auto Update(const double dt, const Keyboard& keyboard) -> void override;
+    auto Update(const double dt) -> void override;
     auto SetStartCallback(std::function<void()> callback) -> void;
 
 private:

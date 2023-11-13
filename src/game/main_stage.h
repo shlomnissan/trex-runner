@@ -3,7 +3,6 @@
 
 #pragma once
 
-#include "core/keyboard.h"
 #include "core/stage.h"
 #include "entities/clouds.h"
 #include "entities/horizon.h"
@@ -23,7 +22,7 @@ public:
     using Stage::Stage;
 
     auto Init() -> void override;
-    auto Update(const double dt, Keyboard& keyboard) -> void override;
+    auto Update(const double dt) -> void override;
 
     ~MainStage() override = default;
 
@@ -43,8 +42,8 @@ private:
     TRex trex_;
     Score score_;
 
-    auto UpdateIntro(const double dt, const Keyboard& keyboard) -> void;
-    auto UpdateRunning(const double dt, const Keyboard& keyboard) -> void;
+    auto UpdateIntro(const double dt) -> void;
+    auto UpdateRunning(const double dt) -> void;
     auto RegisterKeys() -> void;
     auto ResetGame() -> void;
 };

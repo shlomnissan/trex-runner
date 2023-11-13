@@ -7,12 +7,11 @@
 #include <vector>
 
 #include "core/types.h"
-#include "core/keyboard.h"
 #include "core/sprite.h"
 
 class Entity {
 public:
-    virtual auto Update(const double dt, const Keyboard& keyboard) -> void;
+    virtual auto Update(const double dt) -> void;
 
     auto HasCollision(const Entity& entity) const -> bool;
 

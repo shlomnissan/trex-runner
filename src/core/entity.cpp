@@ -6,7 +6,7 @@
 #include "core/resource_manager.h"
 #include "core/sprite_animated.h"
 
-auto Entity::Update(const double dt, const Keyboard &keyboard) -> void {
+auto Entity::Update(const double dt) -> void {
     for (const auto& sprite : sprites_) {
         if (auto animated = dynamic_cast<SpriteAnimated*>(sprite.get())) {
             animated->UpdateFrame();

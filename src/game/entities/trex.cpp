@@ -39,8 +39,8 @@ TRex::TRex() {
     RegisterKeys();
 }
 
-auto TRex::Update(const double dt, const Keyboard &keyboard) -> void {
-    Entity::Update(dt, keyboard);
+auto TRex::Update(const double dt) -> void {
+    Entity::Update(dt);
 
     auto sprite = dynamic_cast<SpriteAnimated*>(sprites_.front().get());
     if (!sprite) return;

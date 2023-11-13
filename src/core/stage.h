@@ -8,13 +8,12 @@
 #include <vector>
 
 #include "core/entity.h"
-#include "core/keyboard.h"
 #include "core/types.h"
 
 class Stage {
 public:
     virtual auto Init() -> void = 0;
-    virtual auto Update(const double dt, Keyboard& keyboard) -> void = 0; 
+    virtual auto Update(const double dt) -> void = 0; 
 
     auto AddEntity(Entity* entity) {
         entities_.emplace_back(entity);

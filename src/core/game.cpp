@@ -46,7 +46,7 @@ auto Game::Start(std::unique_ptr<Stage> scene) -> void {
                 DrawSprite(sprite.get());
             }
         }
-        curr_stage_->Update(delta, keyboard_);
+        curr_stage_->Update(delta);
         window_.DrawScreen(curr_stage_->clip_frame());
     }
 }

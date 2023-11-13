@@ -6,7 +6,6 @@
 #include <array>
 
 #include "core/entity.h"
-#include "core/keyboard.h"
 #include "core/random.h"
 
 class Clouds : public Entity {

@@ -9,7 +9,6 @@
 #include <unordered_map>
 
 #include "core/audio.h"
-#include "core/keyboard.h"
 #include "core/spritesheet.h"
 #include "core/stage.h"
 #include "core/window.h"
@@ -32,7 +31,6 @@ private:
     std::unique_ptr<Stage> curr_stage_ {nullptr};
 
     Window window_;
-    Keyboard keyboard_;
     Audio audio_;
 
     auto SetScene(std::unique_ptr<Stage> scene) -> void;

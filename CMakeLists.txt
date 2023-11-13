@@ -23,8 +23,6 @@ set(CORE_SOURCES
     src/core/game.h
     src/core/image.cpp
     src/core/image.h
-    src/core/keyboard.cpp
-    src/core/keyboard.h
     src/core/random.h
     src/core/resource_manager.cpp
     src/core/resource_manager.h
